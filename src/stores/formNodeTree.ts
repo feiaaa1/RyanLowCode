@@ -72,7 +72,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 			// console.log(formNodeElements, "formNodeElements");
 			const flip = new Flip(
 				Array.from(formNodeElements) as HTMLElement[],
-				0.02
+				0.08
 			);
 			flip.first();
 			if (nodeIndex !== -1) {

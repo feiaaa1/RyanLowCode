@@ -56,12 +56,15 @@ const [collect, drag] = useDrag({
 
 const { isDragging, canDrag } = toRefs(collect);
 
+const isFlip = ref(false);
+
 
 const [, drop] = useDrop({
 	accept: ["INNERFORMNODE", "FORMNODE"],
 	hover: async (formNodeCmpType: FormNodeCmpType | FormNodeTemplate, monitor) => {
 		// 若是为FormNodeTemplate类型，则直接不执行该逻辑
 		if (!('id' in formNodeCmpType)) return
+		if (isFlip.value) return
 		// 立即触发逻辑
 		// 如果动画正在播放，不执行交换动作
 		// if (currentInsertTargetNode.id === ) return;
@@ -83,16 +86,17 @@ const [, drop] = useDrop({
 
 		// console.log(insertFormNode.type, "aftertype");
 
-		if (currentInsertTargetNode.value?.id !== formNode.id) {
-			// console.log(currentInsertTargetNode.value, formNode, "currentInsertTargetNode.value !== formNode");
-			currentInsertTargetNode.value = formNode;
-			addTask(
-				insertBefore,
-				[insertFormNode, formNode],
-			)
-		}
-		// await insertBefore(insertFormNode, formNode);
-
+		// if (currentInsertTargetNode.value?.id !== formNode.id) {
+		// 	// console.log(currentInsertTargetNode.value, formNode, "currentInsertTargetNode.value !== formNode");
+		// 	currentInsertTargetNode.value = formNode;
+		// 	addTask(
+		// 		insertBefore,
+		// 		[insertFormNode, formNode],
+		// 	)
+		// }
+		isFlip.value = true;
+		await insertBefore(insertFormNode, formNode);
+		isFlip.value = false;
 	},
 	drop: async (formNodeTemplate: FormNodeTemplate | FormNodeCmpType) => {
 		// console.log(formNodeTemplate, "formNodeTemplate");
