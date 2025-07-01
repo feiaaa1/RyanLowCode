@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import type { FormNode, FormNodeCmpType } from "@/types/index";
 import { ref, watch } from "vue";
-import { Flip } from "@/utils/flip";
+import { AnimationManager } from "@/utils/animation";
 import { nextTick } from "vue";
 import { ElMessage } from "element-plus";
 export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
@@ -52,10 +52,11 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 
 	const insertBefore = (
 		node: FormNode,
-		target: FormNode | null | undefined
+		target: FormNode | null | undefined,
+		animation = true
 	) => {
-		console.log(node, "node");
-		console.log(target, "target");
+		// console.log(node, "node");
+		// console.log(target, "target");
 		// console.log(formNodeTree.value, "formNodeTree.beforevalue");
 		return new Promise<void>((resolve) => {
 			if (target === undefined || target === null)
@@ -69,12 +70,21 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 			);
 			if (targetIndex === -1) return;
 			const formNodeElements = document.querySelectorAll("[canFlip]");
-			// console.log(formNodeElements, "formNodeElements");
-			const flip = new Flip(
-				Array.from(formNodeElements) as HTMLElement[],
-				0.08
-			);
-			flip.first();
+			// console.log(formNodeElements, "formNodeElements");"
+			// let flip: Flip | null = null;
+
+			let animationManager: AnimationManager | null = null;
+
+			if (animation) {
+				animationManager = new AnimationManager({
+					duration: 100, // 动画持续时间(毫秒)
+					easing: "ease-in-out", // 可选，动画缓动函数
+				});
+				const container = document.getElementById("canvas-container");
+				animationManager.captureAnimationState(container);
+				// flip = new Flip(Array.from(formNodeElements) as HTMLElement[], 0.15);
+				// flip.first();
+			}
 			if (nodeIndex !== -1) {
 				if (targetIndex > nodeIndex) {
 					formNodeTree.value.splice(nodeIndex, 1);
@@ -88,10 +98,17 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 			} else {
 				formNodeTree.value.splice(targetIndex, 0, node);
 			}
-			nextTick(async () => {
-				await flip.play();
+			if (animation) {
+				nextTick(() => {
+					// await (flip as Flip).play();
+					animationManager.animateAll(() => {
+						console.log("动画完成");
+						resolve();
+					});
+				});
+			} else {
 				resolve();
-			});
+			}
 			// console.log(formNodeTree.value, "formNodeTree.aftervalue");
 		});
 	};

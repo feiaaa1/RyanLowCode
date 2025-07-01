@@ -3,7 +3,12 @@
 		drag(ref);
 		drop(ref);
 	}) as any
-		" class="relative w-fit cursor-move" canFlip>
+		" class="relative w-fit cursor-move" canFlip style="will-change: transform;">
+		<template v-if="showPreview">
+			<div class="relative left-0 right-0 h-3 bg-transparent "></div>
+			<div class="relative left-0 right-0 h-1 bg-blue-600 "></div>
+			<div class="relative left-0 right-0 h-3 bg-transparent "></div>
+		</template>
 		<div :style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
 			class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-9 bg-transparent">
 			<div id="drag-wrapper-model" :style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
@@ -33,7 +38,7 @@ import { storeToRefs } from "pinia";
 
 const formNodeTreeStore = useFormNodeTreeStore();
 const { insertBefore, addTask } = formNodeTreeStore;
-const { currentInsertTargetNode, insertTaskQueue } = storeToRefs(formNodeTreeStore);
+// const { currentInsertTargetNode, insertTaskQueue } = storeToRefs(formNodeTreeStore);
 
 
 const componentRegisterStore = useComponentRegisterStore();
@@ -43,7 +48,7 @@ const props = defineProps<{
 	formNode: FormNodeCmpType;
 }>();
 
-const [collect, drag] = useDrag({
+const [dragCollect, drag] = useDrag({
 	type: "INNERFORMNODE",
 	item: props.formNode,
 	collect: (monitor) => {
@@ -54,21 +59,23 @@ const [collect, drag] = useDrag({
 	},
 });
 
-const { isDragging, canDrag } = toRefs(collect);
+const { isDragging, canDrag } = toRefs(dragCollect);
 
 const isFlip = ref(false);
 
-
-const [, drop] = useDrop({
+const showPreview = ref(false);
+const [dropCollect, drop] = useDrop({
 	accept: ["INNERFORMNODE", "FORMNODE"],
 	hover: async (formNodeCmpType: FormNodeCmpType | FormNodeTemplate, monitor) => {
 		// 若是为FormNodeTemplate类型，则直接不执行该逻辑
-		if (!('id' in formNodeCmpType)) return
+		if (monitor.getItemType() === "FORMNODE") {
+			showPreview.value = true;
+			return
+		};
 		if (isFlip.value) return
 		// 立即触发逻辑
 		// 如果动画正在播放，不执行交换动作
 		// if (currentInsertTargetNode.id === ) return;
-		if (!formNodeCmpType.id) return
 		// console.log(formNodeCmpType, "formNodeCmpType");
 		// 深拷贝传入的两个节点
 		const insertFormNode: FormNode = cloneDeep(
@@ -98,10 +105,9 @@ const [, drop] = useDrop({
 		await insertBefore(insertFormNode, formNode);
 		isFlip.value = false;
 	},
-	drop: async (formNodeTemplate: FormNodeTemplate | FormNodeCmpType) => {
+	drop: async (formNodeTemplate: FormNodeTemplate | FormNodeCmpType, monitor) => {
 		// console.log(formNodeTemplate, "formNodeTemplate");
-		if (!formNodeTemplate) return;
-		if ((formNodeTemplate as unknown as FormNodeCmpType).id !== undefined) return;
+		if (monitor.getItemType() === "INNERFORMNODE") return;
 		// 深拷贝传入的两个节点
 		const insertFormNode: FormNode = cloneDeep(
 			formNodeTemplate
@@ -110,9 +116,27 @@ const [, drop] = useDrop({
 		//处理 FormNodeTemplate 类型
 		(insertFormNode as unknown as FormNodeCmpType).id = v4();
 		// console.log(insertFormNode.type, "aftertype");
-		await insertBefore(insertFormNode, formNode);
+		await insertBefore(insertFormNode, formNode, false);
 	},
+	collect: (monitor) => {
+		return {
+			isOver: monitor.isOver(),
+			canDrop: monitor.canDrop(),
+			itemType: monitor.getItemType(),
+		}
+	}
 });
+
+const { isOver, itemType } = toRefs(dropCollect);
+
+watchEffect(() => {
+	if (itemType.value === "FORMNODE" && isOver.value) {
+		showPreview.value = true;
+	}
+	if (!isOver.value) {
+		showPreview.value = false;
+	}
+})
 
 const dragElement = useTemplateRef<HTMLDivElement>("dragElement");
 </script>
