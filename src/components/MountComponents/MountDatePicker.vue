@@ -1,11 +1,6 @@
 <template>
-	<el-form-item :label="props._label" :prop="props._field" :style="itemStyle">
-		<el-date-picker
-			:value="modelValue"
-			type="date"
-			v-bind="props"
-			:style="style"
-		></el-date-picker>
+	<el-form-item :label="props?._label" :prop="props?._field" :style="itemStyle">
+		<el-date-picker :value="modelValue" type="date" v-bind="props" :style="style"></el-date-picker>
 	</el-form-item>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-	<div id="component-panel" class="h-full w-72 grid grid-cols-2 p-4">
+	<div id="component-panel" class="shrink h-full w-full grid grid-cols-2 p-4">
 		<template v-for="formNode in formNodeList" :key="formNode.name">
 			<FormNodeCmp :form-node="formNode" />
 		</template>
@@ -26,6 +26,7 @@ const componentRegisterStore = useComponentRegisterStore();
 const formNodeList = ref<FormNodeTemplate[]>([]);
 
 // 核心功能：根据组件对象生成表单节点模板列表
+console.time("formNodeList");
 Object.values(componentRegisterStore.componentTypeMap).forEach(
 	(component: FormComponent) => {
 		const configs = ref<Record<string, Record<string, any>>>({});
@@ -56,6 +57,7 @@ Object.values(componentRegisterStore.componentTypeMap).forEach(
 		});
 	}
 );
+console.timeEnd("formNodeList");
 
 // console.log(formNodeList.value, "nodeList.value");
 </script>

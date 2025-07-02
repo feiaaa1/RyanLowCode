@@ -36,6 +36,8 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     RyButton: typeof import('./src/components/CommonComponents/RyButton.vue')['default']
+    Toolbar: typeof import('./src/components/DesignerView/Toolbar.vue')['default']
+    Topbar: typeof import('./src/components/DesignerView/Topbar.vue')['default']
     TopToolbar: typeof import('./src/components/DesignerView/TopToolbar.vue')['default']
   }
 }

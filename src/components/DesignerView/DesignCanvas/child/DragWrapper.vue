@@ -3,12 +3,19 @@
 		drag(ref);
 		drop(ref);
 	}) as any
-		" class="relative w-fit cursor-move" canFlip>
+		" class="relative w-fit cursor-move" canFlip @click="handleClick">
+
+		<!-- 悬浮样式 -->
 		<div :style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
-			class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-9 bg-transparent">
+			class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent">
 			<div id="drag-wrapper-model" :style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
 				class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"></div>
 		</div>
+
+		<!-- 选中样式 -->
+		<!-- <div :style="{ opacity: currentFormNode?.id != props.formNode.id ? 0 : 1 }"
+			class="absolute -inset-0.5 border-2 border-solid border-blue-600  z-9 bg-transparent">
+		</div> -->
 		<div ref="dragElement" class="pointer-events-none">
 			<slot></slot>
 		</div>
@@ -25,6 +32,7 @@ import type {
 } from "@/types/index";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { useComponentRegisterStore } from "@/stores/componentRegister";
+import { usePropertyPanelStore } from "@/stores/PropertyPanel";
 import { cloneDeep, isObject } from "lodash";
 import { onMounted, ref, useTemplateRef, watchEffect, computed } from "vue";
 import { toRefs } from "@vueuse/core";
@@ -32,16 +40,28 @@ import { v4 } from "uuid";
 import { storeToRefs } from "pinia";
 
 const formNodeTreeStore = useFormNodeTreeStore();
-const { insertBefore, addTask } = formNodeTreeStore;
-const { currentInsertTargetNode, insertTaskQueue } = storeToRefs(formNodeTreeStore);
-
+const { insertBefore } = formNodeTreeStore;
 
 const componentRegisterStore = useComponentRegisterStore();
 const { componentTypeMap } = componentRegisterStore;
 
+const propertyPanelStore = usePropertyPanelStore();
+const { changeCurrentFormNode } = propertyPanelStore;
+const { currentFormNode } = storeToRefs(propertyPanelStore)
+
+const handleClick = () => {
+	// changeCurrentFormNode(props.formNode);
+}
+
+
 const props = defineProps<{
 	formNode: FormNodeCmpType;
 }>();
+
+// const cloneInsertFormNode = computed(() => {
+//   return   
+// })
+// ;
 
 const [collect, drag] = useDrag({
 	type: "INNERFORMNODE",
@@ -84,17 +104,8 @@ const [, drop] = useDrop({
 			insertFormNode.type as unknown as FormComponent
 		).type;
 
-		// console.log(insertFormNode.type, "aftertype");
-
-		// if (currentInsertTargetNode.value?.id !== formNode.id) {
-		// 	// console.log(currentInsertTargetNode.value, formNode, "currentInsertTargetNode.value !== formNode");
-		// 	currentInsertTargetNode.value = formNode;
-		// 	addTask(
-		// 		insertBefore,
-		// 		[insertFormNode, formNode],
-		// 	)
-		// }
 		isFlip.value = true;
+		console.log(insertFormNode, "insertFormNode");
 		await insertBefore(insertFormNode, formNode);
 		isFlip.value = false;
 	},
