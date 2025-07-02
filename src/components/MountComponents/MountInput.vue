@@ -1,11 +1,6 @@
 <template>
-	<el-form-item :label="props._label" :prop="props._field" :style="itemStyle">
-		<el-input
-			:value="modelValue"
-			@input="$emit('update:modelValue', $event)"
-			v-bind="props"
-			:style="style"
-		>
+	<el-form-item :label="props?._label" :prop="props?._field" :style="itemStyle">
+		<el-input :value="modelValue" @input="$emit('update:modelValue', $event)" v-bind="props" :style="style">
 		</el-input>
 	</el-form-item>
 </template>
@@ -104,28 +99,65 @@ export default {
 				prop: "item-display",
 				defaultValue: "flex",
 				label: "显示方式",
-				type: "options",
-				options: [],
+				type: "select",
+				options: [
+					{
+						label: "flex",
+						value: "flex",
+					},
+					{
+						label: "block",
+						value: "block",
+					}
+				],
 			},
 			{
 				prop: "item-alignItems",
 				defaultValue: "center",
 				label: "垂直对齐方式",
-				type: "options",
-				options: ["flex-start", "flex-end", "center", "baseline", "stretch"],
+				type: "select",
+				options: [
+					{
+						label: "flex-start",
+						value: "flex-start",
+					},
+					{
+						label: "flex-end",
+						value: "flex-end",
+					},
+					{
+						label: "center",
+						value: "center",
+					},
+
+				],
 			},
 			{
 				prop: "item-justifyContent",
 				defaultValue: "flex-start",
 				label: "水平对齐方式",
-				type: "options",
+				type: "select",
 				options: [
-					"flex-start",
-					"flex-end",
-					"center",
-					"space-between",
-					"space-around",
-					"space-evenly",
+					{
+						label: "flex-start",
+						value: "flex-start",
+					},
+					{
+						label: "flex-end",
+						value: "flex-end",
+					},
+					{
+						label: "center",
+						value: "center",
+					},
+					{
+						label: "space-between",
+						value: "space-between",
+					},
+					{
+						label: "space-around",
+						value: "space-around",
+					}
 				],
 			},
 			{

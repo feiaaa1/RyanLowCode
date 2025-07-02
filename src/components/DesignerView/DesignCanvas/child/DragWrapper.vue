@@ -3,17 +3,23 @@
 		drag(ref);
 		drop(ref);
 	}) as any
-		" class="relative w-fit cursor-move" canFlip style="will-change: transform;">
+		" class="relative w-fit cursor-move" canFlip @click="handleClick">
+
+		<!-- 悬浮样式 -- style="will-change: transform;">
 		<template v-if="showPreview">
 			<div class="relative left-0 right-0 h-3 bg-transparent "></div>
 			<div class="relative left-0 right-0 h-1 bg-blue-600 "></div>
 			<div class="relative left-0 right-0 h-3 bg-transparent "></div>
 		</template>
-		<div :style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
-			class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-9 bg-transparent">
-			<div id="drag-wrapper-model" :style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
-				class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"></div>
-		</div>
+<div :style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
+	class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent">
+	<div id="drag-wrapper-model" :style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
+		class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"></div>
+</div>
+<!-- 选中样式 -->
+		<!-- <div :style="{ opacity: currentFormNode?.id != props.formNode.id ? 0 : 1 }"
+		class="absolute -inset-0.5 border-2 border-solid border-blue-600  z-9 bg-transparent">
+	</div> -->
 		<div ref="dragElement" class="pointer-events-none">
 			<slot></slot>
 		</div>
@@ -30,6 +36,7 @@ import type {
 } from "@/types/index";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { useComponentRegisterStore } from "@/stores/componentRegister";
+import { usePropertyPanelStore } from "@/stores/PropertyPanel";
 import { cloneDeep, isObject } from "lodash";
 import { onMounted, ref, useTemplateRef, watchEffect, computed } from "vue";
 import { toRefs } from "@vueuse/core";
@@ -44,9 +51,23 @@ const { insertBefore, addTask } = formNodeTreeStore;
 const componentRegisterStore = useComponentRegisterStore();
 const { componentTypeMap } = componentRegisterStore;
 
+const propertyPanelStore = usePropertyPanelStore();
+const { changeCurrentFormNode } = propertyPanelStore;
+const { currentFormNode } = storeToRefs(propertyPanelStore)
+
+const handleClick = () => {
+	// changeCurrentFormNode(props.formNode);
+}
+
+
 const props = defineProps<{
 	formNode: FormNodeCmpType;
 }>();
+
+// const cloneInsertFormNode = computed(() => {
+//   return   
+// })
+// ;
 
 const [dragCollect, drag] = useDrag({
 	type: "INNERFORMNODE",
@@ -102,6 +123,7 @@ const [dropCollect, drop] = useDrop({
 		// 	)
 		// }
 		isFlip.value = true;
+		console.log(insertFormNode, "insertFormNode");
 		await insertBefore(insertFormNode, formNode);
 		isFlip.value = false;
 	},

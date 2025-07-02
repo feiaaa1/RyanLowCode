@@ -8,15 +8,10 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    AsidePanels: typeof import('./src/components/designer/AsidePanels/index.vue')['default']
-    Box: typeof import('./src/components/mountComponents/Box.vue')['default']
-    ComponentPalette: typeof import('./src/components/designer/AsidePanels/ComponentPalette.vue')['default']
     ComponentPanel: typeof import('./src/components/DesignerView/Panels/ComponentPanel/index.vue')['default']
     DataSourcePanel: typeof import('./src/components/DesignerView/Panels/DataSourcePanel.vue')['default']
     DesignCanvas: typeof import('./src/components/DesignerView/DesignCanvas/index.vue')['default']
-    Designer: typeof import('./src/components/designer/index.vue')['default']
     DragFormNode: typeof import('./src/components/DesignerView/Panels/ComponentPanel/child/DragFormNode.vue')['default']
-    DragWarpper: typeof import('./src/components/DesignerView/DesignCanvas/child/DragWarpper.vue')['default']
     DragWrapper: typeof import('./src/components/DesignerView/DesignCanvas/child/DragWrapper.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
@@ -25,17 +20,16 @@ declare module 'vue' {
     ElInput: typeof import('element-plus/es')['ElInput']
     ElOption: typeof import('element-plus/es')['ElOption']
     ElSelect: typeof import('element-plus/es')['ElSelect']
-    FormNode: typeof import('./src/components/DesignerView/Panels/ComponentPanel/FormNode.vue')['default']
     MountDatePicker: typeof import('./src/components/MountComponents/MountDatePicker.vue')['default']
     MountForm: typeof import('./src/components/MountComponents/MountForm.vue')['default']
     MountInput: typeof import('./src/components/MountComponents/MountInput.vue')['default']
-    MountSelect: typeof import('./src/components/mountComponents/MountSelect.vue')['default']
     OutlineTreePanel: typeof import('./src/components/DesignerView/Panels/OutlineTreePanel.vue')['default']
     PanelTabs: typeof import('./src/components/DesignerView/PanelTabs.vue')['default']
     PropertyPanel: typeof import('./src/components/DesignerView/Panels/PropertyPanel.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     RyButton: typeof import('./src/components/CommonComponents/RyButton.vue')['default']
-    TopToolbar: typeof import('./src/components/DesignerView/TopToolbar.vue')['default']
+    Toolbar: typeof import('./src/components/DesignerView/Toolbar.vue')['default']
+    Topbar: typeof import('./src/components/DesignerView/Topbar.vue')['default']
   }
 }

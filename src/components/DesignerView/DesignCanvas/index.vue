@@ -1,18 +1,11 @@
 <template>
-	<div :ref="drop" id="design-canvas" class="ml-5 h-11/12 aspect-square shadow-lg">
-		<el-form id="canvas-container" ref="form" label-width="auto">
-			<transition-group>
-				<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
-					<DragWrapper :formNode="formNode">
-						<component :is="formNode.type" :configs="formNode.configs" />
-					</DragWrapper>
-				</template>
-				<template v-if="showPreview">
-					<div class="relative - h-3 bg-transparent " :style="{ width: item.configs.style.width }"></div>
-					<div class="relative  h-1 bg-blue-600 " :style="{ width: item.configs.style.width }"></div>
-					<div class="relative  h-3 bg-transparent " :style="{ width: item.configs.style.width }"></div>
-				</template>
-			</transition-group>
+	<div :ref="drop" id="design-canvas" class=" shrink h-11/12 aspect-square shadow-lg">
+		<el-form id="canvas-form" ref="form" label-width="auto">
+			<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
+				<DragWrapper :formNode="formNode">
+					<component :is="formNode.type" :configs="formNode.configs" />
+				</DragWrapper>
+			</template>
 		</el-form>
 	</div>
 </template>
