@@ -3,8 +3,13 @@
 		drag(ref);
 		drop(ref);
 	}) as any
-		" class="relative w-fit cursor-move" canFlip @click="handleClick">
+		" class="relative w-fit cursor-move"
+		:class="{ active: currentFormNode?.id == props.formNode.id, normal: currentFormNode?.id != props.formNode.id }"
+		canFlip @click.stop="handleClick">
 
+
+
+		<!-- 插入预览样式 -->
 		<template v-if="showPreview">
 			<div class="relative left-0 right-0 h-3 bg-transparent "></div>
 			<div class="relative left-0 right-0 h-1 bg-blue-600 "></div>
@@ -18,10 +23,6 @@
 				class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"></div>
 		</div>
 
-		<!-- 选中样式 -->
-		<div :style="{ opacity: currentFormNode?.id != props.formNode.id ? 0 : 1 }"
-			class="absolute -inset-0.5 border-2 border-solid border-blue-600  z-9 bg-transparent">
-		</div>
 		<div ref="dragElement" class="pointer-events-none">
 			<slot></slot>
 		</div>
@@ -58,7 +59,7 @@ const { changeCurrentFormNode } = propertyPanelStore;
 const { currentFormNode } = storeToRefs(propertyPanelStore)
 
 const handleClick = () => {
-	// changeCurrentFormNode(props.formNode);
+	changeCurrentFormNode(props.formNode);
 }
 
 
@@ -109,8 +110,8 @@ const [dropCollect, drop] = useDrop({
 		).type;
 
 		isFlip.value = true;
-		console.log(insertFormNode, "insertFormNode");
-		await insertBefore(insertFormNode, formNode);
+		// console.log(insertFormNode, "insertFormNode");
+		await insertBefore(insertFormNode, formNode, true);
 		isFlip.value = false;
 	},
 	drop: async (formNodeTemplate: FormNodeTemplate | FormNodeCmpType, monitor) => {
@@ -151,12 +152,10 @@ const dragElement = useTemplateRef<HTMLDivElement>("dragElement");
 
 <style lang="scss" scoped>
 .active {
-	position: absolute;
-	inset: -0.5px;
-	border: 2px dashed #ccc;
-	border-radius: 4px;
-	opacity: 0;
-	transition: opacity 0.3s ease-in-out;
-	z-index: 9;
+	border: 2px solid #155dfc;
+}
+
+.normal {
+	border: 2px solid transparent;
 }
 </style>

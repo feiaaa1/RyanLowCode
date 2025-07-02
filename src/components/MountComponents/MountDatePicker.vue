@@ -110,8 +110,18 @@ export default {
 				prop: "item-display",
 				defaultValue: "flex",
 				label: "显示方式",
-				type: "options",
-				options: [],
+				type: "select",
+				options: [
+					{
+						value: "flex",
+						label: "弹性布局"
+					},
+					{
+						value: "block",
+						label: "块级元素"
+					},
+
+				],
 			},
 			{
 				prop: "item-flex",
@@ -123,21 +133,50 @@ export default {
 				prop: "item-alignItems",
 				defaultValue: "center",
 				label: "垂直对齐方式",
-				type: "options",
-				options: ["flex-start", "flex-end", "center", "baseline", "stretch"],
+				type: "select",
+				options: [{
+					value: "flex-start",
+					label: "顶部对齐"
+				},
+				{
+					value: "flex-end",
+					label: "底部对齐"
+				},
+				{
+					value: "center",
+					label: "居中对齐"
+				},
+				{
+					value: "baseline",
+					label: "基线对齐"
+				}],
 			},
 			{
 				prop: "item-justifyContent",
 				defaultValue: "flex-start",
 				label: "水平对齐方式",
-				type: "options",
+				type: "select",
 				options: [
-					"flex-start",
-					"flex-end",
-					"center",
-					"space-between",
-					"space-around",
-					"space-evenly",
+					{
+						value: "flex-start",
+						label: "左对齐"
+					},
+					{
+						value: "flex-end",
+						label: "右对齐"
+					},
+					{
+						value: "center",
+						label: "居中对齐"
+					},
+					{
+						value: "space-between",
+						label: "两端对齐"
+					},
+					{
+						value: "space-around",
+						label: "平均分布"
+					}
 				],
 			},
 			{

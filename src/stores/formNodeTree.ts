@@ -10,7 +10,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 	const insertBefore = (
 		node: FormNode,
 		target: FormNode | null | undefined,
-		animation = true
+		animation = false
 	) => {
 		// console.log(node, "node");
 		// console.log(target, "target");
@@ -32,7 +32,9 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 
 			let animationManager: AnimationManager | null = null;
 
+			// 如果需要动画效果
 			if (animation) {
+				// 创建当前动画实例
 				animationManager = new AnimationManager({
 					duration: 100, // 动画持续时间(毫秒)
 					easing: "ease-in-out", // 可选，动画缓动函数

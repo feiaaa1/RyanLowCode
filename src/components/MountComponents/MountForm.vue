@@ -1,11 +1,6 @@
 <template>
-	<el-form v-bind="props">
-		<component
-			v-for="item in children"
-			:key="item.id"
-			:is="item.type"
-			:options="item.options"
-		></component>
+	<el-form style="border: 2px solid #ccc;" v-bind="props">
+		<component v-for="item in children" :key="item.id" :is="item.type" :options="item.options"></component>
 	</el-form>
 </template>
 

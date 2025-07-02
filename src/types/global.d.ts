@@ -17,11 +17,18 @@ type FormNodeTemplate = {
 	type: string;
 	configs: Record<string, any>;
 	configPanelList: ConfigPanelList;
+	children?: FormNodeTemplate[];
 };
 
 //表单节点类型
-type FormNode = FormNodeTemplate & {
+type FormNode = {
+	nodeType: string; // 节点类型
+	name: string;
+	type: string;
+	configs: Record<string, any>;
+	configPanelList: ConfigPanelList;
 	id: string;
+	children?: FormNode[];
 };
 
 type FormNodeCmpType = {
@@ -31,6 +38,7 @@ type FormNodeCmpType = {
 	configs: Record<string, any>;
 	configPanelList: ConfigPanelList;
 	id: string;
+	children?: FormNodeCmpType[];
 };
 
 // 表单组件类型

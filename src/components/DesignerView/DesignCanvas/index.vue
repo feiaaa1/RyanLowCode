@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import { useDrop } from "vue3-dnd";
-import type { FormNode, FormNodeTemplate } from "@/types/index";
+import type { FormNode, FormNodeCmpType, FormNodeTemplate } from "@/types/index";
 import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { computed, ref, unref, watchEffect } from "vue";
@@ -38,7 +38,7 @@ const formNodeTreeCmpType = computed(() => {
 		return {
 			...formNode,
 			type: componentTypeMap[formNode.type],
-		};
+		} as FormNodeCmpType;
 	});
 });
 
