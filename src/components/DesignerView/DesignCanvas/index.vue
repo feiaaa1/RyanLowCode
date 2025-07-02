@@ -1,6 +1,6 @@
 <template>
 	<div :ref="drop" id="design-canvas" class=" shrink h-11/12 aspect-square shadow-lg">
-		<el-form id="canvas-form" ref="form" label-width="auto">
+		<el-form id="canvas-container" ref="form" label-width="auto">
 			<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
 				<DragWrapper :formNode="formNode">
 					<component :is="formNode.type" :configs="formNode.configs" />

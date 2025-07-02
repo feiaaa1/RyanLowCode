@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import type { FormNode, FormNodeCmpType } from "@/types/index";
 import { ref, watch } from "vue";
-import { Flip } from "@/utils/flip";
 import { AnimationManager } from "@/utils/animation";
 import { nextTick } from "vue";
 import { ElMessage } from "element-plus";
@@ -38,7 +37,9 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 					duration: 100, // 动画持续时间(毫秒)
 					easing: "ease-in-out", // 可选，动画缓动函数
 				});
-				const container = document.getElementById("canvas-container");
+				const container = document.getElementById(
+					"canvas-container"
+				) as HTMLElement;
 				animationManager.captureAnimationState(container);
 				// flip = new Flip(Array.from(formNodeElements) as HTMLElement[], 0.15);
 				// flip.first();
@@ -58,7 +59,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 			}
 			if (animation) {
 				nextTick(() => {
-					// await (flip as Flip).play();
+					if (animationManager === null) return resolve();
 					animationManager.animateAll(() => {
 						console.log("动画完成");
 						resolve();

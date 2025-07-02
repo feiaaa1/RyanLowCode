@@ -5,21 +5,23 @@
 	}) as any
 		" class="relative w-fit cursor-move" canFlip @click="handleClick">
 
-		<!-- 悬浮样式 -- style="will-change: transform;">
 		<template v-if="showPreview">
 			<div class="relative left-0 right-0 h-3 bg-transparent "></div>
 			<div class="relative left-0 right-0 h-1 bg-blue-600 "></div>
 			<div class="relative left-0 right-0 h-3 bg-transparent "></div>
 		</template>
-<div :style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
-	class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent">
-	<div id="drag-wrapper-model" :style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
-		class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"></div>
-</div>
-<!-- 选中样式 -->
-		<!-- <div :style="{ opacity: currentFormNode?.id != props.formNode.id ? 0 : 1 }"
-		class="absolute -inset-0.5 border-2 border-solid border-blue-600  z-9 bg-transparent">
-	</div> -->
+
+		<!--悬浮样式 -->
+		<div :style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
+			class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent">
+			<div id="drag-wrapper-model" :style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
+				class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"></div>
+		</div>
+
+		<!-- 选中样式 -->
+		<div :style="{ opacity: currentFormNode?.id != props.formNode.id ? 0 : 1 }"
+			class="absolute -inset-0.5 border-2 border-solid border-blue-600  z-9 bg-transparent">
+		</div>
 		<div ref="dragElement" class="pointer-events-none">
 			<slot></slot>
 		</div>
@@ -44,7 +46,7 @@ import { v4 } from "uuid";
 import { storeToRefs } from "pinia";
 
 const formNodeTreeStore = useFormNodeTreeStore();
-const { insertBefore, addTask } = formNodeTreeStore;
+const { insertBefore } = formNodeTreeStore;
 // const { currentInsertTargetNode, insertTaskQueue } = storeToRefs(formNodeTreeStore);
 
 
@@ -94,10 +96,7 @@ const [dropCollect, drop] = useDrop({
 			return
 		};
 		if (isFlip.value) return
-		// 立即触发逻辑
-		// 如果动画正在播放，不执行交换动作
-		// if (currentInsertTargetNode.id === ) return;
-		// console.log(formNodeCmpType, "formNodeCmpType");
+
 		// 深拷贝传入的两个节点
 		const insertFormNode: FormNode = cloneDeep(
 			formNodeCmpType
@@ -105,23 +104,10 @@ const [dropCollect, drop] = useDrop({
 		const formNode: FormNode = cloneDeep(props.formNode) as unknown as FormNode;
 		if ((insertFormNode as unknown as FormNodeCmpType).id === props.formNode.id)
 			return;
-		// 处理 FormNodeCmpType 类型
-		// console.log(insertFormNode.type, "type");
-
 		insertFormNode.type = (
 			insertFormNode.type as unknown as FormComponent
 		).type;
 
-		// console.log(insertFormNode.type, "aftertype");
-
-		// if (currentInsertTargetNode.value?.id !== formNode.id) {
-		// 	// console.log(currentInsertTargetNode.value, formNode, "currentInsertTargetNode.value !== formNode");
-		// 	currentInsertTargetNode.value = formNode;
-		// 	addTask(
-		// 		insertBefore,
-		// 		[insertFormNode, formNode],
-		// 	)
-		// }
 		isFlip.value = true;
 		console.log(insertFormNode, "insertFormNode");
 		await insertBefore(insertFormNode, formNode);
