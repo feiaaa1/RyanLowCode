@@ -1,55 +1,77 @@
 <template>
-	<el-form style="border: 2px solid #ccc;" v-bind="props">
-		<component v-for="item in children" :key="item.id" :is="item.type" :options="item.options"></component>
+	<el-form style="border: 2px solid #ccc;" v-bind="_props" :style="style">
+		<template v-for="formNode in props.children" :key="formNode.id">
+			<DragWrapper :formNode="formNode" isAnimation>
+				<component :is="renderNode(formNode)"></component>
+			</DragWrapper>
+		</template>
 	</el-form>
 </template>
 
-<script lang="ts">
-import type { FormNode, ConfigPanelList } from "@/types/index";
-export default {
+<script setup lang="tsx">
+import DragWrapper from "@/components/CommonComponents/DragWrapper.vue";
+import type { FormNodeCmpType } from "@/types/index";
+import { computed, h, type VNode } from "vue";
+
+const renderNode = (formNode: FormNodeCmpType): VNode => {
+	if (formNode.nodeType === "NESTED") {
+		return h(formNode.type, { configs: formNode.configs, children: formNode.children })
+	}
+	return h(formNode.type, { configs: formNode.configs })
+}
+
+defineOptions({
+
 	type: "form",
 	nodeName: "子表单",
 	nodeType: "NESTED",
-	props: {
-		configs: {
-			type: Object,
-			default: () => ({}),
-		},
-		children: {
-			type: Array,
-			default: () => [],
-		},
-	},
-	computed: {
-		props() {
-			return this.configs.props;
-		},
-		validate() {
-			return this.configs.validate;
-		},
-		style() {
-			return this.configs.style;
-		},
-	},
 
 	// 自定义属性面板结构与节点接收的所有可配置内容
 	configPanelList: {
 		props: [
-			// {
-			// 	title: "表单属性",
-			// 	items: [
-			// 		{
-			// 			prop: "labelWidth",
-			// 			defaultValue: "auto",
-			// 			label: "标签宽度",
-			// 			type: "input",
-			// 		},
-			// 	],
-			// },
 		],
 		validate: [{}],
-		style: [{}],
+		style: [{
+			prop: "width",
+			defaultValue: "600px",
+			type: "input",
+			label: "宽度"
+		},
+		{
+			prop: "height",
+			defaultValue: "260px",
+			type: "input",
+			label: "高度"
+		},
+		{
+			prop: "margin",
+			defaultValue: "0",
+			type: "input",
+			label: "外边距"
+		},
+		{
+			prop: "padding",
+			defaultValue: "0",
+			type: "input",
+			label: "内边距"
+		}
+		],
 	},
-};
+
+})
+const props = defineProps<{
+	configs: Record<string, any>,
+	children?: FormNodeCmpType[],
+}>()
+const _props = computed(() => {
+	return props.configs.props
+})
+const validate = computed(() => {
+	return props.configs.validate
+})
+const style = computed(() => {
+	return props.configs.style
+})
+
 </script>
 <style scoped></style>

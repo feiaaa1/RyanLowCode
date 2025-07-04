@@ -8,11 +8,11 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ComponentPanel: typeof import('./src/components/DesignerView/Panels/ComponentPanel/index.vue')['default']
+    ComponentPanel: typeof import('./src/components/DesignerView/Panels/ComponentPanel/ComponentPanel.vue')['default']
     DataSourcePanel: typeof import('./src/components/DesignerView/Panels/DataSourcePanel.vue')['default']
-    DesignCanvas: typeof import('./src/components/DesignerView/DesignCanvas/index.vue')['default']
+    DesignCanvas: typeof import('./src/components/DesignerView/DesignCanvas/DesignCanvas.vue')['default']
     DragFormNode: typeof import('./src/components/DesignerView/Panels/ComponentPanel/child/DragFormNode.vue')['default']
-    DragWrapper: typeof import('./src/components/DesignerView/DesignCanvas/child/DragWrapper.vue')['default']
+    DragWrapper: typeof import('./src/components/CommonComponents/DragWrapper.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
@@ -22,9 +22,11 @@ declare module 'vue' {
     ElOption: typeof import('element-plus/es')['ElOption']
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
+    Loop: typeof import('./src/components/MountComponents/Loop.vue')['default']
     MountDatePicker: typeof import('./src/components/MountComponents/MountDatePicker.vue')['default']
     MountForm: typeof import('./src/components/MountComponents/MountForm.vue')['default']
     MountInput: typeof import('./src/components/MountComponents/MountInput.vue')['default']
+    MountLayout: typeof import('./src/components/MountComponents/MountLayout.vue')['default']
     OutlineTreePanel: typeof import('./src/components/DesignerView/Panels/OutlineTreePanel.vue')['default']
     PanelTabs: typeof import('./src/components/DesignerView/PanelTabs.vue')['default']
     PropertyPanel: typeof import('./src/components/DesignerView/Panels/PropertyPanel.vue')['default']

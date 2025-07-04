@@ -1,27 +1,33 @@
 <template>
-	<div id="property-panel" class="w-[400px] shrink h-full ">
+	<div id="property-panel"
+		class="w-[400px] shrink h-full p-4  flex flex-col items-center justify-start overflow-y-scroll ">
 		<template v-if="Object.keys(formList).length > 0">
-			<el-form v-for="(value, key) in formList" :key="key" :ref="'form' + key" label-width=" 80px">
-				<el-form-item v-for="(item, index) in value" :key="index" :label="item.label" :prop="item.prop">
-					<template v-if="item.type === 'input'">
-						<el-input :placeholder="item.placeholder" :maxLength="20"
-							v-model="form[key][item.prop]"></el-input>
-					</template>
-					<template v-else-if="item.type === 'select'">
-						<<el-select v-model="form[key][item.prop]" :placeholder="item.placeholder" clearable>
-							<el-option v-for="optionItem in item.options" :key="optionItem.value"
-								:label="optionItem.label" :value="optionItem.value"></el-option>
+			<template v-for="(value, key) in formList" :key="key">
+				<div class="w-full bg-gray-300">
+					<span>{{ key }}</span>
+				</div>
+				<el-form :ref="'form' + key" label-width="auto">
+					<el-form-item v-for="(item, index) in value" :key="index" :label="item.label" :prop="item.prop">
+						<template v-if="item.type === 'input'">
+							<el-input :placeholder="item.placeholder" :maxLength="20"
+								v-model="form[key][item.prop]"></el-input>
+						</template>
+						<template v-else-if="item.type === 'select'">
+							<el-select v-model="form[key][item.prop]" :placeholder="item.placeholder" clearable>
+								<el-option v-for="optionItem in item.options" :key="optionItem.value"
+									:label="optionItem.label" :value="optionItem.value"></el-option>
 							</el-select>
-					</template>
-					<template v-else-if="item.type === 'switch'">
-						<el-switch v-model="form[key][item.prop]" :active-value="true"
-							:inactive-value="false"></el-switch>
-					</template>
-					<template v-else>
-						<span>无该类型表单</span>
-					</template>
-				</el-form-item>
-			</el-form>
+						</template>
+						<template v-else-if="item.type === 'switch'">
+							<el-switch v-model="form[key][item.prop]" :active-value="true"
+								:inactive-value="false"></el-switch>
+						</template>
+						<template v-else>
+							<span>无该类型表单</span>
+						</template>
+					</el-form-item>
+				</el-form>
+			</template>
 		</template>
 	</div>
 </template>
@@ -79,5 +85,6 @@ watch(form, (newVal, oldVal) => {
 <style lang="scss" scoped>
 #property-panel {
 	background-color: var(--color-bg-tertiary);
+	border-left: 1px solid var(--color-border-base);
 }
 </style>

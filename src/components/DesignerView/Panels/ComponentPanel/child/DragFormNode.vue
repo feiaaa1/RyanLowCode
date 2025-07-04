@@ -19,7 +19,7 @@ const props = defineProps<{
 }>();
 
 const formNodeTreeStore = useFormNodeTreeStore();
-const { insertBefore } = formNodeTreeStore;
+const { insertInto, formNodeTree } = formNodeTreeStore;
 
 const addFormNode = (item: FormNodeTemplate) => {
 	item = JSON.parse(JSON.stringify(item));
@@ -35,7 +35,7 @@ const addFormNode = (item: FormNodeTemplate) => {
 		enumerable: true,
 		configurable: false,
 	});
-	insertBefore(item as FormNode, null);
+	insertInto(item as FormNode, formNodeTree[0]);
 };
 
 const [, drag] = useDrag({

@@ -38,7 +38,9 @@ export class AnimationManager {
 		this.animationStates = [];
 		if (!this.options.duration) return;
 
-		const children = Array.from(container.children) as HTMLElement[];
+		const children = container.querySelectorAll(
+			"[isAnimation]"
+		) as NodeListOf<HTMLElement>;
 
 		children.forEach((child) => {
 			if (

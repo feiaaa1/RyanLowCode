@@ -42,6 +42,17 @@ export default {
 			return this.configs.validate;
 		},
 	},
+	mounted() {
+		console.log(this.configs, "this.configs");
+	},
+	watch: {
+		configs: {
+			handler(newVal) {
+				console.log(newVal, "newVal");
+			},
+			deep: true,
+		},
+	},
 	// 属性面板结构
 	configPanelList: {
 		props: [
@@ -78,7 +89,7 @@ export default {
 				prop: "disabled",
 				defaultValue: false,
 				label: "禁用",
-				type: "checkbox",
+				type: "switch",
 			},
 		],
 		validate: [],

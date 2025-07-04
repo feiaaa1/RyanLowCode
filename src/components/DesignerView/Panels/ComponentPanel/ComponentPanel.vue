@@ -47,14 +47,16 @@ Object.values(componentRegisterStore.componentTypeMap).forEach(
 				}
 			);
 		}
-		// 配置完configs后推入formNodeList
-		formNodeList.value?.push({
+		const formNode: FormNodeTemplate = {
 			name: component.nodeName,
 			type: component.type,
-			configs: configs,
+			configs: unref(configs),
 			configPanelList: component.configPanelList,
 			nodeType: component.nodeType,
-		});
+		}
+		if (component.nodeType === 'NESTED') formNode.children = []
+		// 配置完configs后推入formNodeList
+		formNodeList.value?.push(formNode);
 	}
 );
 console.timeEnd("formNodeList");
