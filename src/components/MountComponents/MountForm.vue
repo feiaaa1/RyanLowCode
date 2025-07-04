@@ -30,7 +30,7 @@ defineOptions({
 	configPanelList: {
 		props: [
 		],
-		validate: [{}],
+		validate: [],
 		style: [{
 			prop: "width",
 			defaultValue: "600px",
@@ -45,13 +45,13 @@ defineOptions({
 		},
 		{
 			prop: "margin",
-			defaultValue: "0",
+			defaultValue: "10px",
 			type: "input",
 			label: "外边距"
 		},
 		{
 			prop: "padding",
-			defaultValue: "0",
+			defaultValue: "20px",
 			type: "input",
 			label: "内边距"
 		}

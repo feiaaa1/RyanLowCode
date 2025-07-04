@@ -1,7 +1,7 @@
 <template>
-    <div id="outer-container" :style="style">
+    <div id="outer-container" class="border-2 border-gray-200" :style="style">
         <!-- <DragWrapper> -->
-        <div id="inner-container" v-for="(item, index) in _props.cloumn" :key="index">
+        <div class="h-full w-full " id="inner-container" v-for="(item, index) in Number(_props.cloumn)" :key="index">
 
             <template v-if="props.children[index]">
                 <!-- <el-form ref="form" label-width="80px"> -->
@@ -12,8 +12,8 @@
                 <!-- </el-form> -->
             </template>
             <template v-else>
-                <div class="border-2 border-gray-200">
-                    123
+                <div class="bg-gray-200 h-full w-full flex items-center justify-center">
+                    请拖拽组件到此处
                 </div>
             </template>
         </div>
@@ -75,7 +75,7 @@ defineOptions({
         },
         {
             prop: 'justify-content',
-            defaultValue: 'flex-start',
+            defaultValue: 'space-between',
             type: 'select',
             label: '水平对齐',
             options: [{
@@ -105,7 +105,7 @@ defineOptions({
         },
         {
             prop: 'align-items',
-            defaultValue: 'flex-start',
+            defaultValue: 'center',
             type: 'select',
             label: '垂直对齐',
             options: [{
@@ -130,6 +130,12 @@ defineOptions({
             }]
         },
         {
+            prop: "gap",
+            defaultValue: "10px",
+            type: "input",
+            label: "间距"
+        },
+        {
             prop: "margin",
             defaultValue: "0",
             type: "input",
@@ -137,7 +143,7 @@ defineOptions({
         },
         {
             prop: "padding",
-            defaultValue: "0",
+            defaultValue: "20px",
             type: "input",
             label: "内边距"
         }

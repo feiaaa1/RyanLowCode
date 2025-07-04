@@ -22,7 +22,8 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 			configs: {
 				style: {
 					width: "660px",
-					height: "660px",
+					minHeight: "660px",
+					padding: "20px",
 				},
 			},
 			configPanelList: {
@@ -36,10 +37,16 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 						label: "宽度",
 					},
 					{
-						prop: "height",
+						prop: "minHeight",
 						defaultValue: "660px",
 						type: "input",
-						label: "高度",
+						label: "最小高度",
+					},
+					{
+						prop: "padding",
+						defaultValue: "20px",
+						type: "input",
+						label: "内边距",
 					},
 				],
 			},
@@ -211,7 +218,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 			return undefined;
 		};
 		const formNode = findNodeById(formNodeTree.value, id);
-		if (formNode === undefined) return ElMessage.error("未找到目标节点");
+		if (formNode === undefined) return false;
 		const { configs, configPanelList } = cloneDeep(formNode) as FormNode;
 		return {
 			id,
@@ -247,6 +254,31 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		formNode.configs = newConfigs;
 	};
 
+	const getFormNodePath = (formNode: FormNode | FormNodeCmpType) => {
+		const findNodePath = (
+			nodes: FormNode[],
+			targetNode: FormNode | FormNodeCmpType,
+			path: string[] = []
+		): string[] | false => {
+			for (const index in nodes) {
+				const node = nodes[index];
+				if (node.id === targetNode.id) {
+					return path.concat(node.name);
+				}
+				if (node.children && node.children.length > 0) {
+					const res = findNodePath(
+						node.children,
+						targetNode,
+						path.concat(node.name)
+					);
+					if (res) return res;
+				}
+			}
+			return false;
+		};
+		return findNodePath(formNodeTree.value, formNode);
+	};
+
 	return {
 		formNodeTree,
 		insertBefore,
@@ -254,5 +286,6 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		updateFormNodeConfigs,
 		insertInto,
 		deleteFormNode,
+		getFormNodePath,
 	};
 });
