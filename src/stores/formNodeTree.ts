@@ -17,7 +17,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		{
 			id: v4uuid(),
 			type: "form",
-			nodeType: "NESTED",
+			nodeType: ["NESTED", "NODRAG"],
 			name: "表单",
 			configs: {
 				style: {
@@ -32,13 +32,13 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 				style: [
 					{
 						prop: "width",
-						defaultValue: "660px",
+						defaultValue: "640px",
 						type: "input",
 						label: "宽度",
 					},
 					{
 						prop: "minHeight",
-						defaultValue: "660px",
+						defaultValue: "640px",
 						type: "input",
 						label: "最小高度",
 					},

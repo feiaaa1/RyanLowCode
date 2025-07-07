@@ -1,20 +1,12 @@
 <template>
-    <div id="outer-container" class="border-2 border-gray-200" :style="style">
+    <div id="outer-container" class="relative border-2 border-gray-200" :style="style">
         <!-- <DragWrapper> -->
-        <div class="h-full w-full " id="inner-container" v-for="(item, index) in Number(_props.cloumn)" :key="index">
+        <div class="z-10 h-full w-full " id="inner-container" v-for="(item, index) in Number(_props.cloumn)"
+            :key="index">
 
             <template v-if="props.children[index]">
-                <!-- <el-form ref="form" label-width="80px"> -->
-                <DragWrapper :formNode="props.children[index]">
-                    <component :is="props?.children[index]?.type" :configs="props?.children[index]?.configs">
-                    </component>
-                </DragWrapper>
-                <!-- </el-form> -->
-            </template>
-            <template v-else>
-                <div class="bg-gray-200 h-full w-full flex items-center justify-center">
-                    请拖拽组件到此处
-                </div>
+                <PlaceWrapper :index="index" :formNode="props?.children[index]">
+                </PlaceWrapper>
             </template>
         </div>
         <!-- </DragWrapper> -->
@@ -25,6 +17,7 @@
 import { computed } from 'vue'
 import type { FormNodeCmpType } from '@/types/index'
 import DragWrapper from '@/components/CommonComponents/DragWrapper.vue'
+import PlaceWrapper from '../CommonComponents/PlaceWrapper.vue';
 const props = defineProps<{
     configs: Record<string, any>,
     children: FormNodeCmpType[],
@@ -44,7 +37,9 @@ defineOptions({
                 label: "列数"
             }
         ],
+
         validate: [{}],
+
         style: [{
             prop: "width",
             defaultValue: "660px",
@@ -148,6 +143,8 @@ defineOptions({
             label: "内边距"
         }
         ],
+
+
     },
 
 })

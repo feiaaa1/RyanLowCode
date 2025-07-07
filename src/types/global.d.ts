@@ -12,7 +12,7 @@ type ConfigPanelList = Record<string, ConfigPanelItem[]>;
 
 // 表单节点模板类型
 type FormNodeTemplate = {
-	nodeType: string; // 节点类型
+	nodeType: string | string[]; // 节点类型
 	name: string;
 	type: string;
 	configs: Record<string, any>;
@@ -22,7 +22,7 @@ type FormNodeTemplate = {
 
 //表单节点类型
 type FormNode = {
-	nodeType: string; // 节点类型
+	nodeType: string | string[]; // 节点类型
 	name: string;
 	type: string;
 	configs: Record<string, any>;
@@ -32,7 +32,7 @@ type FormNode = {
 };
 
 type FormNodeCmpType = {
-	nodeType: string; // 节点类型
+	nodeType: string | string[]; // 节点类型
 	name: string;
 	type: FormComponent;
 	configs: Record<string, any>;
@@ -47,5 +47,5 @@ type FormComponent = DefineComponent & {
 	type: string; // 组件类型，用于节点树
 	configPanelList: ConfigPanelList; // 组件属性面板
 	nodeName: string; // 节点名称
-	nodeType: string; // 节点类型
+	nodeType: string | string[]; // 节点类型
 };

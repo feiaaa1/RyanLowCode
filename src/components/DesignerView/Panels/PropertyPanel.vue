@@ -54,9 +54,9 @@ import { toRefs } from '@vueuse/core';
 import { ElMessage } from 'element-plus';
 import { ArrowRight } from '@element-plus/icons-vue'
 
+// 属性面板状态
 const propertyPanelStore = usePropertyPanelStore();
 const { currentFormNode } = storeToRefs(propertyPanelStore);
-
 
 const formNodeTreeStore = useFormNodeTreeStore();
 const { getFormNodePropObj, updateFormNodeConfigs, getFormNodePath } = formNodeTreeStore;

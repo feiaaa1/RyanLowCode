@@ -1,11 +1,29 @@
 <template>
 	<div :ref="((ref: Element) => {
-		drag(ref);
+		if (!props.formNode.nodeType.includes('NODRAG')) {
+			drag(ref);
+		}
 		drop(ref);
 	}) as any
 		" class="relative w-fit cursor-move"
 		:class="{ active: currentFormNode?.id == props.formNode.id, normal: currentFormNode?.id != props.formNode.id }"
 		canFlip @click.stop="handleClick">
+		<el-tooltip effect="dark" content="删除" placement="top">
+			<button @click.stop="deleteFormNode(props.formNode.id)" v-if="currentFormNode?.id == props.formNode.id"
+				class="z-50 w-5 h-4 bg-blue-600 absolute -top-4 -right-[2px] flex items-center justify-center cursor-pointer">
+				<Delete class="w-4 h-4 text-white" />
+			</button>
+		</el-tooltip>
+		<el-tooltip effect="dark" :content="props.formNode.id" placement="top">
+			<div v-if="currentFormNode?.id == props.formNode.id"
+				class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[20px] flex items-center justify-center cursor-pointer">
+				ID
+			</div>
+		</el-tooltip>
+		<div v-if="currentFormNode?.id == props.formNode.id"
+			class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[37px] flex items-center justify-center cursor-pointer">
+			{{ props.formNode.name }}
+		</div>
 
 		<!-- 插入预览样式 -->
 		<template v-if="showPreview">
@@ -39,7 +57,7 @@ import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { usePropertyPanelStore } from "@/stores/PropertyPanel";
 import { cloneDeep, isObject } from "lodash";
-import { onMounted, ref, useTemplateRef, watchEffect, computed } from "vue";
+import { onMounted, ref, useTemplateRef, watchEffect, computed, watch } from "vue";
 import { toRefs } from "@vueuse/core";
 import { v4 } from "uuid";
 import { storeToRefs } from "pinia";
@@ -66,11 +84,21 @@ const props = defineProps<{
 	formNode: FormNodeCmpType;
 }>();
 
+// watch(() => props.formNode, (val) => {
+// 	console.log(val, "val");
+// }, {
+// 	deep: true
+// }
+// )
+
 
 // 编写 INNER 节点拖拽逻辑
 const [dragCollect, drag] = useDrag({
 	type: "INNERFORMNODE",
-	item: props.formNode,
+	item: () => {
+		// console.log(props.formNode, "props.formNode");
+		return props.formNode
+	},
 	collect: (monitor) => {
 		return {
 			isDragging: monitor.isDragging(),
@@ -105,6 +133,7 @@ const [dropCollect, drop] = useDrop({
 
 			// 如果当前被放置元素正在进行动画，则不再执行交换逻辑
 			if (isFlip.value) return
+			console.log(formNodeCmpType, "formNodeCmpType");
 			// 深拷贝传入的两个节点
 			const insertFormNode: FormNode = cloneDeep(
 				formNodeCmpType
@@ -119,7 +148,6 @@ const [dropCollect, drop] = useDrop({
 			).type;
 
 			isFlip.value = true;
-			// console.log(insertFormNode, "insertFormNode");
 			// console.log(insertFormNode, "insertFormNode");
 			// console.log(formNode, "formNode");
 			await insertBefore(insertFormNode, formNode, true);
