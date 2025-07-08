@@ -30,7 +30,6 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTooltip: typeof import('element-plus/es')['ElTooltip']
     LayoutItem: typeof import('./src/components/CommonComponents/LayoutItem.vue')['default']
-    Loop: typeof import('./src/components/MountComponents/Loop.vue')['default']
     MountDatePicker: typeof import('./src/components/MountComponents/MountDatePicker.vue')['default']
     MountForm: typeof import('./src/components/MountComponents/MountForm.vue')['default']
     MountInput: typeof import('./src/components/MountComponents/MountInput.vue')['default']

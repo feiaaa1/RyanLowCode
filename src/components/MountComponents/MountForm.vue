@@ -2,7 +2,7 @@
 	<el-form style="border: 2px solid #ccc" v-bind="props" :style="style">
 		<template v-for="formNode in children" :key="formNode.id">
 			<DragWrapper :formNode="formNode" isAnimation>
-				<component :is="renderNode(formNode)"></component>
+				<component :is="renderNode(formNode)" :children=formNode.children></component>
 			</DragWrapper>
 		</template>
 	</el-form>
@@ -22,6 +22,7 @@ const renderNode = (formNode: FormNodeCmpType): VNode => {
 	}
 	return h(formNode.type, { configs: formNode.configs });
 };
+
 
 defineOptions({
 	type: "form",
@@ -62,18 +63,9 @@ defineOptions({
 });
 const { configs, children } = defineProps<{
 	configs: Record<string, any>;
-	children?: FormNodeCmpType[];
+	children: FormNodeCmpType[];
 }>();
 
-watch(
-	() => children,
-	(newVal) => {
-		console.log(newVal);
-	},
-	{
-		deep: true,
-	}
-);
 const props = computed(() => {
 	return configs.props;
 });

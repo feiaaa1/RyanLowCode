@@ -2,8 +2,8 @@
 	<div id="property-panel"
 		class="w-[400px] shrink h-full p-4  flex flex-col items-center justify-start overflow-y-scroll ">
 		<template v-if="Object.keys(formList).length > 0">
-			<el-breadcrumb class="w-full h-6" :separator-icon="ArrowRight">
-				<el-breadcrumb-item v-for="(item, index) in currentFormNodeNamePath" :key="index">{{ item
+			<el-breadcrumb class="w-full m-h-6 mb-2" :separator-icon="ArrowRight">
+				<el-breadcrumb-item class="mb-1 " v-for="(item, index) in currentFormNodeNamePath" :key="index">{{ item
 				}}</el-breadcrumb-item>
 			</el-breadcrumb>
 			<el-collapse class="w-full" v-model="activeNames">
