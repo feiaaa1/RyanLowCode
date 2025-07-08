@@ -1,14 +1,26 @@
 <template>
-  <div id="panel-tabs" class="flex flex-col items-center py-2 w-10">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-      class="size-6">
-      <path stroke-linecap="round" stroke-linejoin="round"
-        d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
-    </svg>
+  <div id="panel-tabs" class="flex flex-col items-center gap-2 py-4 w-10">
+    <el-tooltip effect="dark" content="大纲树" placement="right">
+      <ScaleToOriginal class="w-6 h-6  cursor-pointer"
+        :class="[{ 'text-[var(--color-icon-default)]': currentPanel !== 'ScaleToOriginal' }, { 'text-blue-500': currentPanel === 'ScaleToOriginal' }]"
+        @click="currentPanel = 'ScaleToOriginal'" />
+    </el-tooltip>
+    <el-tooltip effect="dark" content="组件" placement="right">
+      <Menu class="w-6 h-6 cursor-pointer"
+        :class="[{ 'text-[var(--color-icon-default)]': currentPanel !== 'ComponentPanel' }, { 'text-blue-500': currentPanel === 'ComponentPanel' }]"
+        @click="currentPanel = 'ComponentPanel'" />
+    </el-tooltip>
   </div>
+  <ComponentPanel />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const currentPanel = ref('ComponentPanel')
+
+
+</script>
 
 <style scoped>
 #panel-tabs {

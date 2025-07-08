@@ -6,8 +6,9 @@
             <div id="drag-wrapper-model" class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent opacity-15">
             </div>
         </div>
-
-        <slot></slot>
+        <div class="bg-gray-200 h-full w-full flex items-center justify-center">
+            请拖拽组件到此处
+        </div>
     </div>
 </template>
 

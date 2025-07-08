@@ -7,7 +7,6 @@
     <main class="w-full flex justify-between gap-7 flex-auto">
       <div id="left-area" class="w-[425px] flex h-full min-w-0 shrink">
         <PanelTabs />
-        <ComponentPanel />
       </div>
       <div id="center-area" class="w-[660px] flex flex-col justify-between shrink-0 h-full">
         <!-- 顶部工具栏组件 -->

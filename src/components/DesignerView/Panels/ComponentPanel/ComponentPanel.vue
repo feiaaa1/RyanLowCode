@@ -26,7 +26,6 @@ const componentRegisterStore = useComponentRegisterStore();
 const formNodeList = ref<FormNodeTemplate[]>([]);
 
 // 核心功能：根据组件对象生成表单节点模板列表
-console.time("formNodeList");
 Object.values(componentRegisterStore.componentTypeMap).forEach(
 	(component: FormComponent) => {
 		const configs = ref<Record<string, Record<string, any>>>({});
@@ -54,12 +53,11 @@ Object.values(componentRegisterStore.componentTypeMap).forEach(
 			configPanelList: component.configPanelList,
 			nodeType: component.nodeType,
 		}
-		if (component.nodeType === 'NESTED') formNode.children = []
+		if (component.nodeType.includes('NESTED')) formNode.children = []
 		// 配置完configs后推入formNodeList
 		formNodeList.value?.push(formNode);
 	}
 );
-console.timeEnd("formNodeList");
 
 // console.log(formNodeList.value, "nodeList.value");
 </script>

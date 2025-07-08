@@ -1,27 +1,24 @@
 <template>
-	<div :ref="((ref: Element) => {
-		if (!props.formNode.nodeType.includes('NODRAG')) {
-			drag(ref);
-		}
-		drop(ref);
-	}) as any
-		" class="relative w-fit cursor-move"
-		:class="{ active: currentFormNode?.id == props.formNode.id, normal: currentFormNode?.id != props.formNode.id }"
-		canFlip @click.stop="handleClick">
-		<el-tooltip effect="dark" content="删除" placement="top">
-			<button @click.stop="deleteFormNode(props.formNode.id)" v-if="currentFormNode?.id == props.formNode.id"
-				class="z-50 w-5 h-4 bg-blue-600 absolute -top-4 -right-[2px] flex items-center justify-center cursor-pointer">
+	<div :ref="setNodeRef" class="relative w-fit cursor-move" :style="{ width: isRoot ? '100%' : 'fit-content' }"
+		:class="{ active: isActive, normal: !isActive }" canFlip @click.stop="handleClick">
+
+		<!-- 顶部组件操作 -->
+		<el-tooltip effect="dark" content="删除" placement="top" v-if="isActive && !isRoot">
+			<button @click.stop="deleteFormNode(props.formNode.id)"
+				class="z-50 w-5 h-4 bg-blue-600 absolute -top-4 -right-[2px] flex items-center justify-center cursor-pointer"
+				:style="{ top: isRoot ? '0px' : '-16px' }">
 				<Delete class="w-4 h-4 text-white" />
 			</button>
 		</el-tooltip>
-		<el-tooltip effect="dark" :content="props.formNode.id" placement="top">
-			<div v-if="currentFormNode?.id == props.formNode.id"
-				class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[20px] flex items-center justify-center cursor-pointer">
+		<el-tooltip effect="dark" :content="props.formNode.id" placement="top" v-if="isActive">
+			<div class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[20px] flex items-center justify-center cursor-pointer"
+				:style="{ top: isRoot ? '0px' : '-16px' }">
 				ID
 			</div>
 		</el-tooltip>
-		<div v-if="currentFormNode?.id == props.formNode.id"
-			class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[37px] flex items-center justify-center cursor-pointer">
+		<div v-if="isActive"
+			class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[37px] flex items-center justify-center cursor-pointer"
+			:style="{ top: isRoot ? '0px' : '-16px' }">
 			{{ props.formNode.name }}
 		</div>
 
@@ -57,40 +54,49 @@ import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { usePropertyPanelStore } from "@/stores/PropertyPanel";
 import { cloneDeep, isObject } from "lodash";
-import { onMounted, ref, useTemplateRef, watchEffect, computed, watch } from "vue";
+import { onMounted, ref, useTemplateRef, watchEffect, computed, watch, unref } from "vue";
 import { toRefs } from "@vueuse/core";
 import { v4 } from "uuid";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 
+// 组件节点树状态
 const formNodeTreeStore = useFormNodeTreeStore();
 const { insertBefore, insertInto, deleteFormNode } = formNodeTreeStore;
 // const { currentInsertTargetNode, insertTaskQueue } = storeToRefs(formNodeTreeStore);
 
-
+// 组件注册状态
 const componentRegisterStore = useComponentRegisterStore();
 const { componentTypeMap } = componentRegisterStore;
 
+// 组件面板状态
 const propertyPanelStore = usePropertyPanelStore();
 const { changeCurrentFormNode } = propertyPanelStore;
 const { currentFormNode } = storeToRefs(propertyPanelStore)
 
+// 点击事件,传入节点
 const handleClick = () => {
 	changeCurrentFormNode(props.formNode);
 }
 
 
-const props = defineProps<{
+// 需要传入组件节点
+const props = withDefaults(defineProps<{
 	formNode: FormNodeCmpType;
-}>();
+	width?: string
+	minHeight?: string;
+}>(), {
+	width: 'auto',
+	minHeight: 'auto'
+});
 
-// watch(() => props.formNode, (val) => {
-// 	console.log(val, "val");
-// }, {
-// 	deep: true
-// }
-// )
+const isActive = computed(() => unref(currentFormNode)?.id === props.formNode.id);
+const isRoot = computed(() => props.formNode.nodeType.includes('ROOT'))
 
+const setNodeRef = ((ref: Element) => {
+	if (!props.formNode.nodeType.includes('NODRAG')) drag(ref);
+	drop(ref);
+}) as any;
 
 // 编写 INNER 节点拖拽逻辑
 const [dragCollect, drag] = useDrag({
@@ -124,7 +130,7 @@ const [dropCollect, drop] = useDrop({
 	// 左侧节点模板情况
 	// 不进行节点换位，但对当前放置元素进行插入预览样式显示
 	hover: async (formNodeCmpType: FormNodeCmpType | FormNodeTemplate, monitor) => {
-		if (props.formNode.nodeType !== "NESTED") {
+		if (!props.formNode.nodeType.includes("NESTED")) {
 			// 若是为FormNodeTemplate类型，则直接不执行该逻辑
 			if (monitor.getItemType() === "FORMNODE") {
 				showPreview.value = true;
@@ -164,7 +170,7 @@ const [dropCollect, drop] = useDrop({
 		// 判断是否是是发生在当前目标的嵌套目标内， 确保逻辑只作用在最顶部当前元素
 		if (monitor.isOver({ shallow: true })) {
 			if (monitor.getItemType() === "INNERFORMNODE") {
-				if (props.formNode.nodeType !== "NESTED") return
+				if (!props.formNode.nodeType.includes("NESTED")) return
 				if (props.formNode.id == (formNodeTemplate as unknown as FormNode).id) return
 				// 深拷贝传入的两个节点
 				const insertFormNode: FormNode = cloneDeep(
@@ -183,7 +189,7 @@ const [dropCollect, drop] = useDrop({
 				//处理 FormNodeTemplate 类型
 				(insertFormNode as unknown as FormNodeCmpType).id = v4();
 				// console.log(insertFormNode.type, "aftertype");
-				if (props.formNode.nodeType === "NESTED") {
+				if (props.formNode.nodeType.includes("NESTED")) {
 					insertInto(insertFormNode, formNode);
 				} else {
 					await insertBefore(insertFormNode, formNode, false);
@@ -203,7 +209,7 @@ const [dropCollect, drop] = useDrop({
 const { isOver, itemType } = toRefs(dropCollect);
 
 watchEffect(() => {
-	if (itemType.value === "FORMNODE" && isOver.value && props.formNode.nodeType !== "NESTED") {
+	if (itemType.value === "FORMNODE" && isOver.value && !props.formNode.nodeType.includes("NESTED")) {
 		showPreview.value = true;
 	}
 	if (!isOver.value) {
@@ -211,7 +217,6 @@ watchEffect(() => {
 	}
 })
 
-const dragElement = useTemplateRef<HTMLDivElement>("dragElement");
 </script>
 
 <style lang="scss" scoped>

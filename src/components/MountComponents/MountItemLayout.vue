@@ -1,77 +1,32 @@
 <template>
-    <div id="outer-container" class="relative border-2 border-gray-200" :style="style">
-        <!-- <DragWrapper> -->
-        <div class="z-10 h-full w-full " id="inner-container" v-for="(item, index) in Number(_props.cloumn)"
-            :key="index">
-            <component :is="props.children[index].type" :id="props.children[index].id"
-                :children="props.children[index].children" />
+    <div class="relative h-full w-full">
+        <!--悬浮样式 -->
+        <div
+            class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent">
+            <div id="drag-wrapper-model" class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent opacity-15">
+            </div>
         </div>
-        <!-- </DragWrapper> -->
+        <div class="bg-gray-200 h-full w-full flex items-center justify-center">
+            请拖拽组件到此处
+        </div>
     </div>
 </template>
-
 <script setup lang="tsx">
-import { computed, watch, ref, unref } from 'vue'
-import type { FormNodeCmpType, ConfigPanelItem, FormNode } from '@/types/index'
-import DragWrapper from '@/components/CommonComponents/DragWrapper.vue'
-import PlaceWrapper from '../CommonComponents/PlaceWrapper.vue';
+import { computed } from 'vue'
+import type { FormNodeCmpType } from '@/types/index'
 const props = defineProps<{
     configs: Record<string, any>,
     children: FormNodeCmpType[],
-    id: string
 }>()
-
-import { useFormNodeTreeStore } from '@/stores/formNodeTree';
-const formNodeTreeStore = useFormNodeTreeStore();
-const { formNodeTree } = storeToRefs(formNodeTreeStore)
-const { findNodeById } = formNodeTreeStore
-
-import { useComponentRegisterStore } from '@/stores/componentRegister';
-import { storeToRefs } from 'pinia';
-const componentRegisterStore = useComponentRegisterStore();
-const layoutItemCmp = componentRegisterStore.componentTypeMap['layoutItem']
-layoutItemCmp.type = 'layoutItem'
-const configs = ref<Record<string, Record<string, any>>>({})
-for (const key in layoutItemCmp.configPanelList) {
-    configs.value[key] = {};
-    // 获取组件第一层配置项 prop、validate、style，值为configPanelItem数组
-    layoutItemCmp.configPanelList[key].forEach(
-        (configPanelItem: ConfigPanelItem) => {
-            //遍历该数组，并解构出每个configPanelItem的prop，并赋值为defaultValue
-            const { prop, defaultValue } = configPanelItem;
-            unref(configs)[key][prop] = defaultValue;
-        }
-    );
-}
-layoutItemCmp.configs = unref(configs)
-import { v4 as uuidv4 } from 'uuid';
-import { cloneDeep } from 'lodash'
-watch(() => props.configs.props.cloumn, (newVal, oldVal) => {
-    const nodeInfo = findNodeById(props.id, formNodeTree.value)
-    if (!nodeInfo) return
-    if (newVal > oldVal) {
-        const layoutItemCmpClone = cloneDeep(layoutItemCmp)
-        layoutItemCmpClone.id = uuidv4()
-        nodeInfo.array.push(layoutItemCmpClone as unknown as FormNode)
-    }
-    else {
-        nodeInfo.array.pop()
-    }
-})
 defineOptions({
-    type: "layout",
-    nodeName: "布局容器",
-    nodeType: ["NESTED", "NODROP"],
+    type: "layoutItem",
+    nodeName: "布局",
+    nodeType: ["NESTED", "NODRAG"],
 
     // 自定义属性面板结构与节点接收的所有可配置内容
     configPanelList: {
         props: [
-            {
-                prop: "cloumn",
-                defaultValue: 3,
-                type: "input",
-                label: "列数"
-            }
+
         ],
 
         validate: [{}],

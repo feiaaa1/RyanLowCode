@@ -34,6 +34,7 @@ declare module 'vue' {
     MountDatePicker: typeof import('./src/components/MountComponents/MountDatePicker.vue')['default']
     MountForm: typeof import('./src/components/MountComponents/MountForm.vue')['default']
     MountInput: typeof import('./src/components/MountComponents/MountInput.vue')['default']
+    MountItemLayout: typeof import('./src/components/MountComponents/MountItemLayout.vue')['default']
     MountLayout: typeof import('./src/components/MountComponents/MountLayout.vue')['default']
     OutlineTreePanel: typeof import('./src/components/DesignerView/Panels/OutlineTreePanel.vue')['default']
     PanelTabs: typeof import('./src/components/DesignerView/PanelTabs.vue')['default']

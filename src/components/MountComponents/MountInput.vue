@@ -9,7 +9,7 @@
 export default {
 	type: "input",
 	nodeName: "单行输入框",
-	nodeType: "ORDINARY",
+	nodeType: ["ORDINARY"],
 	props: {
 		modelValue: String,
 		configs: {

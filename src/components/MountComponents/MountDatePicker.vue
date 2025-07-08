@@ -8,7 +8,7 @@
 export default {
 	type: "datePicker",
 	nodeName: "日期选择器",
-	nodeType: "ORDINARY",
+	nodeType: ["ORDINARY"],
 	props: {
 		modelValue: String,
 		configs: {

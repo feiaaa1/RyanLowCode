@@ -1,5 +1,5 @@
 <template>
-	<div :ref="drop" id="design-canvas" class=" shrink h-11/12 mb-4 aspect-square shadow-2xl overflow-scroll">
+	<div :ref="drop" id="design-canvas" class="shrink h-11/12 mb-4 aspect-square shadow-2xl overflow-scroll">
 		<!-- <el-form id="canvas-container" ref="form" label-width="auto"> -->
 		<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
 			<DragWrapper :formNode="formNode" isAnimation>
@@ -94,7 +94,7 @@ watchEffect(() => {
 
 <style lang="scss" scoped>
 #design-canvas {
-	background-color: var(--color-bg-primary);
+	background-color: var(--color-bg-tertiary);
 	border-right: 1px solid var(--color-border-base);
 
 	&::-webkit-scrollbar {
