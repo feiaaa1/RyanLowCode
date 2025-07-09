@@ -43,12 +43,12 @@ export default {
 		},
 	},
 	mounted() {
-		console.log(this.configs, "this.configs");
+		// console.log(this.configs, "this.configs");
 	},
 	watch: {
 		configs: {
 			handler(newVal) {
-				console.log(newVal, "newVal");
+				// console.log(newVal, "newVal");
 			},
 			deep: true,
 		},
@@ -119,7 +119,7 @@ export default {
 					{
 						label: "block",
 						value: "block",
-					}
+					},
 				],
 			},
 			{
@@ -140,7 +140,6 @@ export default {
 						label: "center",
 						value: "center",
 					},
-
 				],
 			},
 			{
@@ -168,7 +167,7 @@ export default {
 					{
 						label: "space-around",
 						value: "space-around",
-					}
+					},
 				],
 			},
 			{

@@ -1,8 +1,13 @@
 <template>
-	<el-form style="border: 2px solid #ccc" v-bind="props" :style="style">
-		<template v-for="formNode in children" :key="formNode.id">
+	<el-form v-bind="props" :style="style">
+		<template v-for="formNode in childrens" :key="formNode.id">
 			<DragWrapper :formNode="formNode" isAnimation>
-				<component :is="renderNode(formNode)" :children=formNode.children></component>
+				<component
+					:is="renderNode(formNode)"
+					:configs="formNode.configs"
+					:id="formNode.id"
+					:childrens="formNode.childrens"
+				></component>
 			</DragWrapper>
 		</template>
 	</el-form>
@@ -17,12 +22,11 @@ const renderNode = (formNode: FormNodeCmpType): VNode => {
 	if (formNode.nodeType === "NESTED") {
 		return h(formNode.type, {
 			configs: formNode.configs,
-			children: formNode.children,
+			childrens: formNode.childrens,
 		});
 	}
 	return h(formNode.type, { configs: formNode.configs });
 };
-
 
 defineOptions({
 	type: "form",
@@ -61,9 +65,9 @@ defineOptions({
 		],
 	},
 });
-const { configs, children } = defineProps<{
+const { configs, childrens } = defineProps<{
 	configs: Record<string, any>;
-	children: FormNodeCmpType[];
+	childrens: FormNodeCmpType[];
 }>();
 
 const props = computed(() => {

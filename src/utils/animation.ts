@@ -38,11 +38,11 @@ export class AnimationManager {
 		this.animationStates = [];
 		if (!this.options.duration) return;
 
-		const children = container.querySelectorAll(
+		const childrens = container.querySelectorAll(
 			"[isAnimation]"
 		) as NodeListOf<HTMLElement>;
 
-		children.forEach((child) => {
+		childrens.forEach((child) => {
 			if (
 				(excludeHidden && getComputedStyle(child).display === "none") ||
 				child.classList.contains("ghost")

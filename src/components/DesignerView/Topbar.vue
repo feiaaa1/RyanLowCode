@@ -16,7 +16,7 @@ import { ref } from 'vue';
 const { formNodeTree } = storeToRefs(useFormNodeTreeStore());
 
 const handleClick = () => {
-	console.log("预览");
+	// console.log("预览");
 };
 
 const visible = ref(false);

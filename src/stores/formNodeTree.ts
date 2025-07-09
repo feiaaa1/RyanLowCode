@@ -38,7 +38,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 					},
 				],
 			},
-			children: [],
+			childrens: [],
 		},
 	]);
 
@@ -146,6 +146,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 
 	// 插入到指定节点内部作为子节点
 	const insertInto = (node: FormNode, target: FormNode) => {
+		if (!target.nodeType.includes("NESTED")) return;
 		const targetInfo = findNodeById(target.id, formNodeTree.value);
 
 		if (!targetInfo) {
@@ -154,8 +155,10 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		}
 		const targetFormNode = targetInfo.array[targetInfo.index];
 
-		if (targetFormNode.children === undefined) targetFormNode.children = [];
-		targetFormNode.children.push(node);
+		if (targetFormNode.childrens === undefined) targetFormNode.childrens = [];
+		// console.log(targetFormNode.childrens, "targetFormNode.childrens");
+		targetFormNode.childrens.push(node);
+
 		// console.log(targetFormNode, "targetFormNode");
 		// console.log(formNodeTree.value, "formNodeTree");
 	};
@@ -174,16 +177,15 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 					path: path.concat(Number(index)),
 				};
 			}
-			if (formNode.children && formNode.children.length > 0) {
+			if (formNode.childrens && formNode.childrens.length > 0) {
 				const res = findNodeById(
 					id,
-					formNode.children,
+					formNode.childrens,
 					path.concat(Number(index))
 				);
 				if (res) return res;
 			}
 		}
-		console.error("未找到节点", id, formNodeArray);
 		return false;
 	};
 
@@ -196,8 +198,8 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 				if (node.id === targetId) {
 					return node;
 				}
-				if (node.children && node.children.length > 0) {
-					const foundNode = findNodeById(node.children, targetId);
+				if (node.childrens && node.childrens.length > 0) {
+					const foundNode = findNodeById(node.childrens, targetId);
 					if (foundNode) {
 						return foundNode;
 					}
@@ -227,8 +229,8 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 				if (node.id === targetId) {
 					return node;
 				}
-				if (node.children && node.children.length > 0) {
-					const foundNode = findNodeById(node.children, targetId);
+				if (node.childrens && node.childrens.length > 0) {
+					const foundNode = findNodeById(node.childrens, targetId);
 					if (foundNode) {
 						return foundNode;
 					}
@@ -253,9 +255,9 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 				if (node.id === targetNode.id) {
 					return path.concat(node.name);
 				}
-				if (node.children && node.children.length > 0) {
+				if (node.childrens && node.childrens.length > 0) {
 					const res = findNodePath(
-						node.children,
+						node.childrens,
 						targetNode,
 						path.concat(node.name)
 					);

@@ -3,7 +3,8 @@
 		<!-- <el-form id="canvas-container" ref="form" label-width="auto"> -->
 		<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
 			<DragWrapper :formNode="formNode" isAnimation>
-				<component :is="formNode.type" :configs="formNode.configs" :children="formNode.children" />
+				<component :is="formNode.type" :configs="formNode.configs" :childrens="formNode.childrens"
+					:id="formNode.id" />
 			</DragWrapper>
 		</template>
 		<!-- </el-form> -->
@@ -41,7 +42,7 @@ const formNodeTreeCmpType = computed(() => {
 			return {
 				...formNode,
 				type: componentTypeMap[formNode.type],
-				children: setCmpType(cloneDeep(formNode.children)),
+				childrens: setCmpType(cloneDeep(formNode.childrens)),
 			};
 		});
 	};

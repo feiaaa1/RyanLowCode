@@ -27,6 +27,9 @@
 										:label="optionItem.label" :value="optionItem.value"></el-option>
 								</el-select>
 							</template>
+							<template v-else-if="item.type === 'input-number'">
+								<el-input-number v-model="form[key][item.prop]" :min="1" :max="100" />
+							</template>
 							<template v-else-if="item.type === 'switch'">
 								<el-switch v-model="form[key][item.prop]" :active-value="true"
 									:inactive-value="false"></el-switch>

@@ -53,7 +53,7 @@ Object.values(componentRegisterStore.componentTypeMap).forEach(
 			configPanelList: component.configPanelList,
 			nodeType: component.nodeType,
 		}
-		if (component.nodeType.includes('NESTED')) formNode.children = []
+		if (component.nodeType.includes('NESTED')) formNode.childrens = []
 		// 配置完configs后推入formNodeList
 		formNodeList.value?.push(formNode);
 	}
