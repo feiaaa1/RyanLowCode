@@ -4,65 +4,66 @@
 		:ref="setNodeRef"
 		class="relative w-fit cursor-move"
 		:style="{ width: isRoot ? '100%' : 'fit-content' }"
-		:class="{ active: isActive, normal: !isActive }"
+		:class="{ active: isActive && !isPreview, normal: !isActive || isPreview }"
 		isAnimation
 		@click.stop="handleClick"
 	>
-		<!-- 顶部组件操作 -->
-		<el-tooltip
-			effect="dark"
-			content="删除"
-			placement="top"
-			v-if="isActive && !isRoot"
-		>
-			<button
-				@click.stop="deleteFormNode(props.formNode.id)"
-				class="z-50 w-5 h-4 bg-blue-600 absolute -top-4 -right-[2px] flex items-center justify-center cursor-pointer"
-				:style="{ top: isRoot ? '0px' : '-16px' }"
+		<template v-if="!isPreview">
+			<!-- 顶部组件操作 -->
+			<el-tooltip
+				effect="dark"
+				content="删除"
+				placement="top"
+				v-if="isActive && !isRoot"
 			>
-				<Delete class="w-4 h-4 text-white" />
-			</button>
-		</el-tooltip>
-		<el-tooltip
-			effect="dark"
-			:content="props.formNode.id"
-			placement="top"
-			v-if="isActive"
-		>
+				<button
+					@click.stop="deleteFormNode(props.formNode.id)"
+					class="z-50 w-5 h-4 bg-blue-600 absolute -top-4 -right-[2px] flex items-center justify-center cursor-pointer"
+					:style="{ top: isRoot ? '0px' : '-16px' }"
+				>
+					<Delete class="w-4 h-4 text-white" />
+				</button>
+			</el-tooltip>
+			<el-tooltip
+				effect="dark"
+				:content="props.formNode.id"
+				placement="top"
+				v-if="isActive"
+			>
+				<div
+					class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[20px] flex items-center justify-center cursor-pointer"
+					:style="{ top: isRoot ? '0px' : '-16px' }"
+				>
+					ID
+				</div>
+			</el-tooltip>
 			<div
-				class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[20px] flex items-center justify-center cursor-pointer"
+				v-if="isActive"
+				class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[37px] flex items-center justify-center cursor-pointer"
 				:style="{ top: isRoot ? '0px' : '-16px' }"
 			>
-				ID
+				{{ props.formNode.name }}
 			</div>
-		</el-tooltip>
-		<div
-			v-if="isActive"
-			class="z-50 w-fit text-[14px] text-white h-4 bg-blue-600 absolute -top-4 right-[37px] flex items-center justify-center cursor-pointer"
-			:style="{ top: isRoot ? '0px' : '-16px' }"
-		>
-			{{ props.formNode.name }}
-		</div>
 
-		<!-- 插入预览样式 -->
-		<template v-if="showPreview">
-			<div class="relative left-0 right-0 h-3 bg-transparent"></div>
-			<div class="relative left-0 right-0 h-1 bg-blue-600"></div>
-			<div class="relative left-0 right-0 h-3 bg-transparent"></div>
-		</template>
+			<!-- 插入预览样式 -->
+			<template v-if="showPreview">
+				<div class="relative left-0 right-0 h-3 bg-transparent"></div>
+				<div class="relative left-0 right-0 h-1 bg-blue-600"></div>
+				<div class="relative left-0 right-0 h-3 bg-transparent"></div>
+			</template>
 
-		<!--悬浮样式 -->
-		<div
-			:style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
-			class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent"
-		>
+			<!--悬浮样式 -->
 			<div
-				id="drag-wrapper-model"
-				:style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
-				class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"
-			></div>
-		</div>
-
+				:style="{ opacity: isDragging || !canDrag ? 0 : 1 }"
+				class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent"
+			>
+				<div
+					id="drag-wrapper-model"
+					:style="{ opacity: isDragging || !canDrag ? 0 : 0.15 }"
+					class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent"
+				></div>
+			</div>
+		</template>
 		<div ref="dragElement">
 			<slot></slot>
 		</div>
@@ -96,6 +97,10 @@ import { v4 } from "uuid";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 
+import { usePreviewStore } from "@/stores/preview";
+const previewStore = usePreviewStore();
+const { isPreview } = storeToRefs(previewStore);
+
 // 组件节点树状态
 const formNodeTreeStore = useFormNodeTreeStore();
 const { insertBefore, insertInto, deleteFormNode } = formNodeTreeStore;
@@ -112,6 +117,7 @@ const { currentFormNode } = storeToRefs(propertyPanelStore);
 
 // 点击事件,传入节点
 const handleClick = () => {
+	if (isPreview.value) return;
 	changeCurrentFormNode(props.formNode);
 };
 
@@ -134,6 +140,7 @@ const isActive = computed(
 const isRoot = computed(() => props.formNode.nodeType.includes("ROOT"));
 
 const setNodeRef = ((ref: Element) => {
+	if (isPreview.value) return;
 	if (!props.formNode.nodeType.includes("NODRAG")) drag(ref);
 	drop(ref);
 }) as any;

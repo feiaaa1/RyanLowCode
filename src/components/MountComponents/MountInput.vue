@@ -1,6 +1,11 @@
 <template>
 	<el-form-item :label="props?._label" :prop="props?._field" :style="itemStyle">
-		<el-input :value="modelValue" @input="$emit('update:modelValue', $event)" v-bind="props" :style="style">
+		<el-input
+			:value="modelValue"
+			@input="$emit('update:modelValue', $event)"
+			v-bind="props"
+			:style="style"
+		>
 		</el-input>
 	</el-form-item>
 </template>
@@ -92,7 +97,26 @@ export default {
 				type: "switch",
 			},
 		],
-		validate: [],
+		validate: [
+			{
+				prop: "required",
+				defaultValue: false,
+				label: "必填",
+				type: "switch",
+			},
+			{
+				prop: "min",
+				defaultValue: "",
+				label: "最小长度",
+				type: "input",
+			},
+			{
+				prop: "max",
+				defaultValue: "",
+				label: "最大长度",
+				type: "input",
+			},
+		],
 		style: [
 			{
 				prop: "width",

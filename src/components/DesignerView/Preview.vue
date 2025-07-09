@@ -1,22 +1,21 @@
 <template>
-	<div
-		:ref="drop"
-		id="design-canvas"
-		class="shrink h-10/12 mx-7 mb-4 aspect-square shadow-2xl overflow-scroll"
-	>
-		<!-- <el-form id="canvas-container" ref="form" label-width="auto"> -->
-		<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
-			<DragWrapper :formNode="formNode">
+	<el-drawer v-model="visible" title="预览页面" direction="btt">
+		<div
+			id="design-canvas"
+			class="shrink h-[600px] mb-4 w-[1240px] shadow-2xl overflow-scroll"
+		>
+			<!-- <el-form id="canvas-container" ref="form" label-width="auto"> -->
+			<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
 				<component
 					:is="formNode.type"
 					:configs="formNode.configs"
 					:childrens="formNode.childrens"
 					:id="formNode.id"
 				/>
-			</DragWrapper>
-		</template>
-		<!-- </el-form> -->
-	</div>
+			</template>
+			<!-- </el-form> -->
+		</div>
+	</el-drawer>
 </template>
 
 <script setup lang="ts">
@@ -28,9 +27,9 @@ import type {
 } from "@/types/index";
 import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
-import { computed, ref, unref, watchEffect } from "vue";
+import { computed, ref, unref, watch, watchEffect } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import DragWrapper from "../../CommonComponents/DragWrapper.vue";
+import DragWrapper from "@/components/CommonComponents/DragWrapper.vue";
 import { storeToRefs } from "pinia";
 import { toRefs } from "@vueuse/core";
 import { cloneDeep, isObject } from "lodash";
@@ -45,6 +44,32 @@ const { formNodeTree } = storeToRefs(formNodeTreeStore);
 const { insertBefore } = formNodeTreeStore;
 
 // console.log(formNodeTree, "formNodeTree");
+
+import { usePreviewStore } from "@/stores/preview";
+const previewStore = usePreviewStore();
+const { changePreview } = previewStore;
+const { drawer } = defineProps<{
+	drawer: boolean;
+}>();
+
+watch(
+	() => drawer,
+	(value) => {
+		changePreview(value);
+	}
+);
+
+const emit = defineEmits<{
+	(e: "update:drawer", value: boolean): void;
+}>();
+const visible = computed({
+	get() {
+		return drawer;
+	},
+	set() {
+		emit("update:drawer", false);
+	},
+});
 
 const formNodeTreeCmpType = computed(() => {
 	const setCmpType = (

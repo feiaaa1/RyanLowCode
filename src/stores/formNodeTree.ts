@@ -46,7 +46,8 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 	const insertBefore = (
 		node: FormNode,
 		target: FormNode | null | undefined,
-		animation = false
+		animation = false,
+		insertAfter = false
 	) => {
 		// console.log(node, "node");
 		// console.log(target, "target");
@@ -63,12 +64,12 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 				console.error("未找到目标节点", target.id);
 				return;
 			}
-			console.log(
-				cloneDeep(nodeInfo),
-				"nodeInfo",
-				cloneDeep(targetInfo),
-				"targetInfo"
-			);
+			// console.log(
+			// 	cloneDeep(nodeInfo),
+			// 	"nodeInfo",
+			// 	cloneDeep(targetInfo),
+			// 	"targetInfo"
+			// );
 			// // console.log(formNodeElements, "formNodeElements");"
 			// let flip: Flip | null = null;
 
@@ -125,7 +126,11 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 					}
 				}
 			} else {
-				targetInfo.array.splice(targetInfo.index + 1, 0, node);
+				if (insertAfter) {
+					targetInfo.array.splice(targetInfo.index + 1, 0, node);
+				} else {
+					targetInfo.array.splice(targetInfo.index, 0, node);
+				}
 			}
 			if (animation) {
 				nextTick(() => {

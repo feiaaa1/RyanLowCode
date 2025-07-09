@@ -57,7 +57,7 @@ const addFormNode = (item: FormNodeTemplate) => {
 	if (currentFormNode.value?.nodeType.includes("NESTED"))
 		return insertInto(item as FormNode, currentFormNode.value);
 	else if (currentFormNode.value?.nodeType.includes("ORDINARY"))
-		return insertBefore(item as FormNode, currentFormNode.value, false);
+		return insertBefore(item as FormNode, currentFormNode.value, false, true);
 };
 
 const [, drag] = useDrag({
