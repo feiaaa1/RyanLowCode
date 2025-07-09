@@ -1,12 +1,11 @@
-1.提供悬浮样式 2.提供插入预览样式 3.提供 INNER 组件拖拽和被放置逻辑
-
+<!-- 1.提供悬浮样式 2.提供插入预览样式 3.提供 INNER 组件拖拽和被放置逻辑 -->
 <template>
 	<div
 		:ref="setNodeRef"
 		class="relative w-fit cursor-move"
 		:style="{ width: isRoot ? '100%' : 'fit-content' }"
 		:class="{ active: isActive, normal: !isActive }"
-		canFlip
+		isAnimation
 		@click.stop="handleClick"
 	>
 		<!-- 顶部组件操作 -->

@@ -54,15 +54,21 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		return new Promise<void>((resolve) => {
 			if (target === undefined || target === null)
 				return formNodeTree.value.push(node);
-			// 找到 node 在formNodeTree 中的位置，包含所在的父节点
+			// 根据 id 找到 node 在formNodeTree 中的位置，包含所在的父节点
 			const nodeInfo = findNodeById(node.id, formNodeTree.value);
-			// 找到 target 在formNodeTree 中的位置，包含所在的父节点
+			// 根据 id 找到 target 在formNodeTree 中的位置，包含所在的父节点
 			const targetInfo = findNodeById(target.id, formNodeTree.value);
 			// 未找到插入目标节点，直接返回
 			if (!targetInfo) {
 				console.error("未找到目标节点", target.id);
 				return;
 			}
+			console.log(
+				cloneDeep(nodeInfo),
+				"nodeInfo",
+				cloneDeep(targetInfo),
+				"targetInfo"
+			);
 			// // console.log(formNodeElements, "formNodeElements");"
 			// let flip: Flip | null = null;
 
@@ -119,14 +125,16 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 					}
 				}
 			} else {
-				targetInfo.array.splice(targetInfo.index, 0, node);
+				targetInfo.array.splice(targetInfo.index + 1, 0, node);
 			}
 			if (animation) {
 				nextTick(() => {
-					if (animationManager === null) return resolve();
-					animationManager.animateAll(() => {
-						// console.log("动画完成");
-						resolve();
+					nextTick(() => {
+						if (animationManager === null) return resolve();
+						animationManager.animateAll(() => {
+							// console.log("动画完成");
+							resolve();
+						});
 					});
 				});
 			} else {
@@ -163,6 +171,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		// console.log(formNodeTree.value, "formNodeTree");
 	};
 
+	// 根据 id 递归查找节点，返回节点所在的父节点数组、节点在父节点数组中的索引、节点在父节点数组中的路径
 	const findNodeById = (
 		id: string,
 		formNodeArray: FormNode[],

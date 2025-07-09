@@ -16,8 +16,8 @@
 			请拖拽组件到此处
 		</div>
 		<div class="relative z-11" v-else>
-			<template v-for="formNode in childrens">
-				<DragWrapper :formNode="formNode">
+			<template v-for="formNode in childrens" :key="formNode.id">
+				<DragWrapper :formNode="formNode" isAnimation>
 					<component
 						:is="renderNode(formNode)"
 						:configs="formNode.configs"

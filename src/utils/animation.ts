@@ -16,7 +16,7 @@ interface Rect {
 	width: number;
 	height: number;
 }
-
+import { cloneDeep } from "lodash";
 export class AnimationManager {
 	private animationStates: AnimationState[] = [];
 	private animationCallbackId: number | null = null;
@@ -194,23 +194,25 @@ export class AnimationManager {
 		// 强制重绘
 		this.forceRepaint(target);
 
-		// 开始动画
-		target.style.transition = `transform ${duration}ms${
-			this.options.easing ? ` ${this.options.easing}` : ""
-		}`;
-		target.style.transform = "translate3d(0, 0, 0)";
+		requestAnimationFrame(() => {
+			// 开始动画
+			target.style.transition = `transform ${duration}ms${
+				this.options.easing ? ` ${this.options.easing}` : ""
+			}`;
+			target.style.transform = "translate3d(0, 0, 0)";
 
-		// 清除之前的动画定时器
-		if ((target as any).animationTimer) {
-			clearTimeout((target as any).animationTimer);
-		}
+			// 清除之前的动画定时器
+			if ((target as any).animationTimer) {
+				clearTimeout((target as any).animationTimer);
+			}
 
-		// 设置动画结束后的清理
-		(target as any).animationTimer = setTimeout(() => {
-			target.style.transition = "";
-			target.style.transform = "";
-			(target as any).animationTimer = null;
-		}, duration);
+			// 设置动画结束后的清理
+			(target as any).animationTimer = setTimeout(() => {
+				target.style.transition = "";
+				target.style.transform = "";
+				(target as any).animationTimer = null;
+			}, duration);
+		});
 	}
 
 	/**

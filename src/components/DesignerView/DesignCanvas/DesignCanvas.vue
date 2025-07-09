@@ -1,10 +1,18 @@
 <template>
-	<div :ref="drop" id="design-canvas" class="shrink h-11/12 mb-4 aspect-square shadow-2xl overflow-scroll">
+	<div
+		:ref="drop"
+		id="design-canvas"
+		class="shrink h-11/12 mb-4 aspect-square shadow-2xl overflow-scroll"
+	>
 		<!-- <el-form id="canvas-container" ref="form" label-width="auto"> -->
 		<template v-for="formNode in formNodeTreeCmpType" :key="formNode.id">
-			<DragWrapper :formNode="formNode" isAnimation>
-				<component :is="formNode.type" :configs="formNode.configs" :childrens="formNode.childrens"
-					:id="formNode.id" />
+			<DragWrapper :formNode="formNode">
+				<component
+					:is="formNode.type"
+					:configs="formNode.configs"
+					:childrens="formNode.childrens"
+					:id="formNode.id"
+				/>
 			</DragWrapper>
 		</template>
 		<!-- </el-form> -->
@@ -13,7 +21,11 @@
 
 <script setup lang="ts">
 import { useDrop } from "vue3-dnd";
-import type { FormNode, FormNodeCmpType, FormNodeTemplate } from "@/types/index";
+import type {
+	FormNode,
+	FormNodeCmpType,
+	FormNodeTemplate,
+} from "@/types/index";
 import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { computed, ref, unref, watchEffect } from "vue";
@@ -35,7 +47,9 @@ const { insertBefore } = formNodeTreeStore;
 // console.log(formNodeTree, "formNodeTree");
 
 const formNodeTreeCmpType = computed(() => {
-	const setCmpType = (FormNodeList: FormNode[] | undefined): FormNodeCmpType[] => {
+	const setCmpType = (
+		FormNodeList: FormNode[] | undefined
+	): FormNodeCmpType[] => {
 		if (FormNodeList === undefined) return [];
 		if (FormNodeList.length === 0) return [];
 		return FormNodeList.map((formNode: FormNode): FormNodeCmpType => {
@@ -47,7 +61,6 @@ const formNodeTreeCmpType = computed(() => {
 		});
 	};
 	return setCmpType(cloneDeep(unref(formNodeTree)));
-
 });
 
 const showPreview = ref(false);
@@ -76,8 +89,8 @@ const [dropCollect, drop] = useDrop({
 		return {
 			isOver: monitor.isOver({ shallow: true }),
 			item: monitor.getItem(),
-		}
-	}
+		};
+	},
 });
 
 const { isOver, item } = toRefs(dropCollect);
@@ -88,7 +101,7 @@ watchEffect(() => {
 	} else {
 		showPreview.value = false;
 	}
-})
+});
 
 // console.log(collect, "collect");
 </script>
