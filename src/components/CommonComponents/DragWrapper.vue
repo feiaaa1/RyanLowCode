@@ -178,52 +178,42 @@ const [dropCollect, drop] = useDrop({
 		formNodeCmpType: FormNodeCmpType | FormNodeTemplate,
 		monitor
 	) => {
-		if (monitor.isOver({ shallow: true })) {
-			if (!props.formNode.nodeType.includes("NESTED")) {
-				// 若是为FormNodeTemplate类型，则直接不执行该逻辑
-				if (monitor.getItemType() === "FORMNODE") {
-					showPreview.value = true;
-					return;
-				}
-
-				// 如果当前被放置元素正在进行动画，则不再执行交换逻辑
-				if (isFlip.value) return;
-				// console.log(formNodeCmpType, "formNodeCmpType");
-				// 深拷贝传入的两个节点
-				let insertFormNode: FormNode = cloneDeep(
-					formNodeCmpType
-				) as unknown as FormNode;
-				const formNode: FormNode = cloneDeep(
-					props.formNode
-				) as unknown as FormNode;
-				// 如果放置节点和拖拽节点是同一个，直接无视
-				if (
-					(insertFormNode as unknown as FormNodeCmpType).id ===
-					props.formNode.id
-				)
-					return;
-
-				insertFormNode.type = (
-					insertFormNode.type as unknown as FormComponent
-				).type;
-				if (insertFormNode.childrens)
-					insertFormNode = deepProcessArray(
-						insertFormNode,
-						"childrens",
-						(node) => {
-							// console.log(node, 'node');
-							if (typeof node.type === "string") return;
-							node.type = (node.type as unknown as FormComponent).type;
-						}
-					);
-
-				isFlip.value = true;
-				// console.log(insertFormNode, "insertFormNode");
-				// console.log(formNode, "formNode");
-				await insertBefore(insertFormNode, formNode, true);
-				isFlip.value = false;
-			}
+		if (!monitor.isOver({ shallow: true })) return;
+		if (props.formNode.nodeType.includes("NESTED")) return;
+		if (
+			checkUniformId(props.formNode.id, formNodeCmpType as unknown as FormNode)
+		)
+			return;
+		// 若是为FormNodeTemplate类型，则直接不执行该逻辑
+		if (monitor.getItemType() === "FORMNODE") {
+			showPreview.value = true;
+			return;
 		}
+		// 如果当前被放置元素正在进行动画，则不再执行交换逻辑
+		if (isFlip.value) return;
+		// console.log(formNodeCmpType, "formNodeCmpType");
+		// 深拷贝传入的两个节点
+		let insertFormNode: FormNode = cloneDeep(
+			formNodeCmpType
+		) as unknown as FormNode;
+		const formNode: FormNode = cloneDeep(props.formNode) as unknown as FormNode;
+		// 如果放置节点和拖拽节点是同一个，直接无视
+
+		insertFormNode.type = (
+			insertFormNode.type as unknown as FormComponent
+		).type;
+		if (insertFormNode.childrens)
+			insertFormNode = deepProcessArray(insertFormNode, "childrens", (node) => {
+				// console.log(node, 'node');
+				if (typeof node.type === "string") return;
+				node.type = (node.type as unknown as FormComponent).type;
+			});
+
+		isFlip.value = true;
+		// console.log(insertFormNode, "insertFormNode");
+		// console.log(formNode, "formNode");
+		await insertBefore(insertFormNode, formNode, true);
+		isFlip.value = false;
 	},
 
 	// 放置逻辑
