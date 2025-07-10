@@ -1,5 +1,11 @@
 <template>
-	<el-form-item :label="props?._label" :prop="props?._field" :style="itemStyle">
+	<el-form-item
+		:label="props?.item_label"
+		:prop="props?.item_field"
+		:label-width="props?.item_labelWidth"
+		:label-position="props?.item_labelPosition"
+		:style="itemStyle"
+	>
 		<el-input
 			:value="modelValue"
 			@input="$emit('update:modelValue', $event)"
@@ -62,7 +68,7 @@ export default {
 	configPanelList: {
 		props: [
 			{
-				prop: "_field",
+				prop: "item_field",
 				defaultValue: "",
 				label: "字段名",
 				type: "input",
@@ -73,16 +79,36 @@ export default {
 				},
 			},
 			{
-				prop: "_label",
+				prop: "item_label",
 				defaultValue: "单行文本",
 				label: "标题",
 				type: "input",
 			},
 			{
-				prop: "_labelWidth",
+				prop: "item_labelWidth",
 				defaultValue: "auto",
 				label: "标签宽度",
 				type: "input",
+			},
+			{
+				prop: "item_labelPosition",
+				defaultValue: "left",
+				label: "标签位置",
+				type: "select",
+				options: [
+					{
+						label: "上对齐",
+						value: "top",
+					},
+					{
+						label: "左对齐",
+						value: "left",
+					},
+					{
+						label: "右对齐",
+						value: "right",
+					},
+				],
 			},
 			{
 				prop: "placeholder",
@@ -130,70 +156,7 @@ export default {
 				label: "高度",
 				type: "input",
 			},
-			{
-				prop: "item-display",
-				defaultValue: "flex",
-				label: "显示方式",
-				type: "select",
-				options: [
-					{
-						label: "flex",
-						value: "flex",
-					},
-					{
-						label: "block",
-						value: "block",
-					},
-				],
-			},
-			{
-				prop: "item-alignItems",
-				defaultValue: "center",
-				label: "垂直对齐方式",
-				type: "select",
-				options: [
-					{
-						label: "flex-start",
-						value: "flex-start",
-					},
-					{
-						label: "flex-end",
-						value: "flex-end",
-					},
-					{
-						label: "center",
-						value: "center",
-					},
-				],
-			},
-			{
-				prop: "item-justifyContent",
-				defaultValue: "flex-start",
-				label: "水平对齐方式",
-				type: "select",
-				options: [
-					{
-						label: "flex-start",
-						value: "flex-start",
-					},
-					{
-						label: "flex-end",
-						value: "flex-end",
-					},
-					{
-						label: "center",
-						value: "center",
-					},
-					{
-						label: "space-between",
-						value: "space-between",
-					},
-					{
-						label: "space-around",
-						value: "space-around",
-					},
-				],
-			},
+
 			{
 				prop: "item-margin",
 				defaultValue: "0",

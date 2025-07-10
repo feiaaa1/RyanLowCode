@@ -97,6 +97,7 @@ import { v4 } from "uuid";
 import { storeToRefs } from "pinia";
 import { ElMessage } from "element-plus";
 
+// 预览状态
 import { usePreviewStore } from "@/stores/preview";
 const previewStore = usePreviewStore();
 const { isPreview } = storeToRefs(previewStore);

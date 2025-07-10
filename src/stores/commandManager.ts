@@ -113,27 +113,24 @@ export class CompositeNodeCommand implements Command {
 }
 
 export class ModifyNodeCommand implements Command {
-	private nodes: FormNode[];
-	private formNode: FormNode;
-	private oldNode: FormNode;
+	private obj: Record<string, any>;
+	private prop: string;
+	private newVal: any;
+	private oldVal: any;
 
-	constructor(nodes: FormNode[], formNode: FormNode) {
-		this.nodes = nodes;
-		this.formNode = formNode;
-		this.oldNode = JSON.parse(JSON.stringify(formNode)); // 深拷贝
+	constructor(obj: Record<string, any>, prop: string, newVal: any) {
+		this.obj = obj;
+		this.prop = prop;
+		this.newVal = newVal;
+		this.oldVal = obj[prop];
 	}
 	execute() {
-		this.nodes.forEach((node) => {
-			if (node.id === this.formNode.id) {
-				Object.assign(node, this.formNode);
-			}
-		});
+		// 修改新值
+		this.obj[this.prop] = this.newVal;
+		console.log(this.obj[this.prop]);
 	}
 	undo() {
-		this.nodes.forEach((node) => {
-			if (node.id === this.formNode.id) {
-				Object.assign(node, this.oldNode);
-			}
-		});
+		this.obj[this.prop] = this.oldVal; // 恢复旧值
+		console.log(this.obj[this.prop]);
 	}
 }

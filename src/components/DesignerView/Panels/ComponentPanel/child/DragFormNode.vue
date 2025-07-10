@@ -5,7 +5,7 @@
 			size="default"
 			@click="addFormNode(props.formNode)"
 			id="formNode"
-			class="!active:cursor-move !cursor-move w-28 h-10 text-center leading-[38px] rounded-lg"
+			class="!active:cursor-move !cursor-auto w-28 h-10 text-center leading-[38px] rounded-lg"
 		>
 			{{ props.formNode.name }}
 		</el-button>

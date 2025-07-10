@@ -1,17 +1,17 @@
 <template>
 	<div class="relative" :style="style">
 		<!--悬浮样式 -->
-		<div
+		<!-- <div
 			class="absolute -inset-0.5 border-2 border-dashed hover:border-blue-600 border-transparent z-10 bg-transparent"
 		>
 			<div
 				id="drag-wrapper-model"
 				class="absolute inset-0 z-10 hover:bg-blue-600 bg-transparent opacity-15"
 			></div>
-		</div>
+		</div> -->
 		<div
 			class="bg-gray-200 h-full w-full flex items-center justify-center"
-			v-if="!(childrens?.length > 0)"
+			v-if="!(childrens?.length > 0) && !isPreview"
 		>
 			请拖拽组件到此处
 		</div>
@@ -38,6 +38,12 @@ const { configs, childrens } = defineProps<{
 	configs: Record<string, any>;
 	childrens: FormNodeCmpType[];
 }>();
+
+// 预览状态
+import { usePreviewStore } from "@/stores/preview";
+import { storeToRefs } from "pinia";
+const previewStore = usePreviewStore();
+const { isPreview } = storeToRefs(previewStore);
 
 const renderNode = (formNode: FormNodeCmpType): VNode => {
 	if (formNode.nodeType === "NESTED") {

@@ -304,7 +304,10 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		const formNode = findNodeById(formNodeTree.value, id);
 		if (formNode === undefined) return ElMessage.error("未找到目标节点");
 		// // console.log(newConfigs, "newConfigs");
-		formNode.configs = newConfigs;
+		commandManager.value.execute(
+			new ModifyNodeCommand(formNode, "configs", newConfigs)
+		);
+		// formNode.configs = newConfigs;
 	};
 
 	const getFormNodePath = (formNode: FormNode | FormNodeCmpType) => {
