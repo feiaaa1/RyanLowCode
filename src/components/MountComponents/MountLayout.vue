@@ -1,6 +1,6 @@
 <template>
 	<div id="outer-container" class="relative" :style="style">
-		<template v-for="(formNode, index) in props.childrens" :key="formNode.id">
+		<template v-for="formNode in props.childrens" :key="formNode.id">
 			<DragWrapper :formNode="formNode">
 				<component
 					:is="formNode.type"
@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="tsx">
-import { computed, watch, ref, unref, onMounted } from "vue";
+import { computed, watch, ref, unref } from "vue";
 import type { FormNodeCmpType, ConfigPanelItem, FormNode } from "@/types/index";
 import DragWrapper from "@/components/CommonComponents/DragWrapper.vue";
 const props = defineProps<{
@@ -26,7 +26,7 @@ const props = defineProps<{
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 const formNodeTreeStore = useFormNodeTreeStore();
 const { formNodeTree } = storeToRefs(formNodeTreeStore);
-const { findNodeById, insertInto } = formNodeTreeStore;
+const { findNodeById } = formNodeTreeStore;
 
 import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { storeToRefs } from "pinia";
@@ -54,10 +54,9 @@ layoutItemCmp.type = "layoutItem";
 layoutItemCmp.configs = unref(configs);
 import { v4 as uuidv4 } from "uuid";
 import { cloneDeep } from "lodash";
-import { ElMessage } from "element-plus";
 watch(
 	() => props.configs.props.cloumn,
-	(newVal, oldVal) => {
+	(newVal) => {
 		const nodeInfo = findNodeById(props.id, formNodeTree.value);
 		if (Number.isNaN(Number(newVal)) || newVal === "") return;
 		if (!nodeInfo) return;
@@ -216,12 +215,6 @@ defineOptions({
 			},
 		],
 	},
-});
-const _props = computed(() => {
-	return props.configs.props;
-});
-const validate = computed(() => {
-	return props.configs.validate;
 });
 const style = computed(() => {
 	return props.configs.style;

@@ -80,22 +80,12 @@ import type {
 } from "@/types/index";
 import deepProcessArray from "@/utils/deepProcess";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
-import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { usePropertyPanelStore } from "@/stores/PropertyPanel";
-import { cloneDeep, isObject } from "lodash";
-import {
-	onMounted,
-	ref,
-	useTemplateRef,
-	watchEffect,
-	computed,
-	watch,
-	unref,
-} from "vue";
+import { cloneDeep } from "lodash";
+import { ref, watchEffect, computed, unref } from "vue";
 import { toRefs } from "@vueuse/core";
 import { v4 } from "uuid";
 import { storeToRefs } from "pinia";
-import { ElMessage } from "element-plus";
 
 // 预览状态
 import { usePreviewStore } from "@/stores/preview";
@@ -108,8 +98,6 @@ const { insertBefore, insertInto, deleteFormNode } = formNodeTreeStore;
 // const { currentInsertTargetNode, insertTaskQueue } = storeToRefs(formNodeTreeStore);
 
 // 组件注册状态
-const componentRegisterStore = useComponentRegisterStore();
-const { componentTypeMap } = componentRegisterStore;
 
 // 组件面板状态
 const propertyPanelStore = usePropertyPanelStore();

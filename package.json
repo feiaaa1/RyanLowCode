@@ -25,6 +25,7 @@
     "vue3-dnd": "^2.1.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.20",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vitejs/plugin-vue-jsx": "^5.0.1",
     "@vue/tsconfig": "^0.7.0",

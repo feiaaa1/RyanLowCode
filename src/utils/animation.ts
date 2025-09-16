@@ -1,6 +1,6 @@
 interface AnimationState {
 	target: HTMLElement;
-	rect: DOMRect;
+	rect: Rect;
 }
 
 interface AnimationOptions {
@@ -16,7 +16,6 @@ interface Rect {
 	width: number;
 	height: number;
 }
-import { cloneDeep } from "lodash";
 export class AnimationManager {
 	private animationStates: AnimationState[] = [];
 	private animationCallbackId: number | null = null;

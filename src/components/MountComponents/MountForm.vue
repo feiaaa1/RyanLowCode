@@ -16,7 +16,7 @@
 <script setup lang="tsx">
 import DragWrapper from "@/components/CommonComponents/DragWrapper.vue";
 import type { FormNodeCmpType } from "@/types/index";
-import { computed, h, watch, type VNode } from "vue";
+import { computed, h, type VNode } from "vue";
 
 const renderNode = (formNode: FormNodeCmpType): VNode => {
 	if (formNode.nodeType === "NESTED") {
@@ -72,9 +72,6 @@ const { configs, childrens } = defineProps<{
 
 const props = computed(() => {
 	return configs.props;
-});
-const validate = computed(() => {
-	return configs.validate;
 });
 const style = computed(() => {
 	return configs.style;

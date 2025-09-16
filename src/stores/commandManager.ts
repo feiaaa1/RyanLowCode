@@ -1,4 +1,4 @@
-import type { FormNode, FormNodeCmpType } from "@/types/index";
+import type { FormNode } from "@/types/index";
 import { defineStore } from "pinia";
 import { ref } from "vue";
 type Command = {

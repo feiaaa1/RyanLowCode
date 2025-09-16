@@ -33,7 +33,7 @@ import { v4 as uuidv4 } from "uuid";
 import DragWrapper from "../../CommonComponents/DragWrapper.vue";
 import { storeToRefs } from "pinia";
 import { toRefs } from "@vueuse/core";
-import { cloneDeep, isObject } from "lodash";
+import { cloneDeep } from "lodash";
 defineOptions({
 	name: "DesignCanvas",
 });
@@ -93,7 +93,7 @@ const [dropCollect, drop] = useDrop({
 	},
 });
 
-const { isOver, item } = toRefs(dropCollect);
+const { isOver } = toRefs(dropCollect);
 
 watchEffect(() => {
 	if (isOver.value) {

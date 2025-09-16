@@ -1,6 +1,11 @@
 <template>
 	<el-form-item :label="props?._label" :prop="props?._field" :style="itemStyle">
-		<el-date-picker :value="modelValue" type="date" v-bind="props" :style="style"></el-date-picker>
+		<el-date-picker
+			:value="modelValue"
+			type="date"
+			v-bind="props"
+			:style="style"
+		></el-date-picker>
 	</el-form-item>
 </template>
 
@@ -114,13 +119,12 @@ export default {
 				options: [
 					{
 						value: "flex",
-						label: "弹性布局"
+						label: "弹性布局",
 					},
 					{
 						value: "block",
-						label: "块级元素"
+						label: "块级元素",
 					},
-
 				],
 			},
 			{
@@ -134,22 +138,24 @@ export default {
 				defaultValue: "center",
 				label: "垂直对齐方式",
 				type: "select",
-				options: [{
-					value: "flex-start",
-					label: "顶部对齐"
-				},
-				{
-					value: "flex-end",
-					label: "底部对齐"
-				},
-				{
-					value: "center",
-					label: "居中对齐"
-				},
-				{
-					value: "baseline",
-					label: "基线对齐"
-				}],
+				options: [
+					{
+						value: "flex-start",
+						label: "顶部对齐",
+					},
+					{
+						value: "flex-end",
+						label: "底部对齐",
+					},
+					{
+						value: "center",
+						label: "居中对齐",
+					},
+					{
+						value: "baseline",
+						label: "基线对齐",
+					},
+				],
 			},
 			{
 				prop: "item-justifyContent",
@@ -159,24 +165,24 @@ export default {
 				options: [
 					{
 						value: "flex-start",
-						label: "左对齐"
+						label: "左对齐",
 					},
 					{
 						value: "flex-end",
-						label: "右对齐"
+						label: "右对齐",
 					},
 					{
 						value: "center",
-						label: "居中对齐"
+						label: "居中对齐",
 					},
 					{
 						value: "space-between",
-						label: "两端对齐"
+						label: "两端对齐",
 					},
 					{
 						value: "space-around",
-						label: "平均分布"
-					}
+						label: "平均分布",
+					},
 				],
 			},
 			{

@@ -58,7 +58,7 @@ export default {
 	},
 	watch: {
 		configs: {
-			handler(newVal) {
+			handler() {
 				// console.log(newVal, "newVal");
 			},
 			deep: true,

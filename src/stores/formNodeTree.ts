@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import type { FormNode, FormNodeCmpType } from "@/types/index";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { AnimationManager } from "@/utils/animation";
 import { nextTick } from "vue";
 import { ElMessage } from "element-plus";

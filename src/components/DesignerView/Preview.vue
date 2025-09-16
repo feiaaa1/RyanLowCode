@@ -29,10 +29,9 @@ import { useComponentRegisterStore } from "@/stores/componentRegister";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { computed, ref, unref, watch, watchEffect } from "vue";
 import { v4 as uuidv4 } from "uuid";
-import DragWrapper from "@/components/CommonComponents/DragWrapper.vue";
 import { storeToRefs } from "pinia";
 import { toRefs } from "@vueuse/core";
-import { cloneDeep, isObject } from "lodash";
+import { cloneDeep } from "lodash";
 defineOptions({
 	name: "DesignCanvas",
 });
@@ -90,7 +89,7 @@ const formNodeTreeCmpType = computed(() => {
 
 const showPreview = ref(false);
 
-const [dropCollect, drop] = useDrop({
+const [dropCollect] = useDrop({
 	accept: "FORMNODE",
 	drop: (item: FormNodeTemplate, monitor) => {
 		if (monitor.isOver({ shallow: true })) {
@@ -118,7 +117,7 @@ const [dropCollect, drop] = useDrop({
 	},
 });
 
-const { isOver, item } = toRefs(dropCollect);
+const { isOver } = toRefs(dropCollect);
 
 watchEffect(() => {
 	if (isOver.value) {

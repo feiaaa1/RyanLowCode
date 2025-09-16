@@ -18,7 +18,7 @@
 					v-for="(value, key) in formList"
 					:key="key"
 				>
-					<template #title="{ isActive }">
+					<template #title>
 						<div class="text-lg">
 							<span v-if="key === 'props'"> 属性 </span>
 							<span v-else-if="key === 'validate'"> 校验 </span>
@@ -84,9 +84,8 @@
 import { usePropertyPanelStore } from "@/stores/PropertyPanel";
 import { storeToRefs } from "pinia";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
-import { computed, ref, toRaw, watch, watchEffect } from "vue";
-import type { FormNode, ConfigPanelList } from "@/types/index";
-import { toRefs } from "@vueuse/core";
+import { computed, ref, watch } from "vue";
+import type { ConfigPanelList } from "@/types/index";
 import { ElMessage } from "element-plus";
 import { ArrowRight } from "@element-plus/icons-vue";
 
@@ -96,7 +95,7 @@ const { currentFormNode } = storeToRefs(propertyPanelStore);
 const formNodeTreeStore = useFormNodeTreeStore();
 const { getFormNodePropObj, updateFormNodeConfigs, getFormNodePath } =
 	formNodeTreeStore;
-const { formNodeTree } = storeToRefs(formNodeTreeStore);
+storeToRefs(formNodeTreeStore);
 
 const form = ref<Record<string, any>>({});
 const formList = ref<ConfigPanelList>({});
@@ -126,7 +125,7 @@ const currentFormNodeNamePath = computed(() => {
 
 watch(
 	form,
-	(newVal, oldVal) => {
+	(newVal) => {
 		if (newVal && currentFormNode.value?.id) {
 			// console.log(form.value, 'form.value')
 			// console.log(newVal, 'newVal')

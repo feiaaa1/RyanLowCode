@@ -188,12 +188,6 @@ defineOptions({
 		],
 	},
 });
-const props = computed(() => {
-	return configs.props;
-});
-const validate = computed(() => {
-	return configs.validate;
-});
 const style = computed(() => {
 	return configs.style;
 });
