@@ -30,5 +30,5 @@ app.use(webSee, {
 	silentWhiteScreen: true,
 });
 
-webSee.use(performance);
-webSee.use(recordscreen);
+webSee.use(performance, {});
+webSee.use(recordscreen, {});
