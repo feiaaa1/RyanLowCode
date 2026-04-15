@@ -49,3 +49,13 @@ type FormComponent = DefineComponent & {
 	nodeName: string; // 节点名称
 	nodeType: string | string[]; // 节点类型
 };
+
+type RuntimeSubmitConfig = {
+	mode?: "internal" | "proxy";
+	endpoint?: string;
+	method?: "POST" | "PUT";
+	successMessage?: string;
+	resetAfterSubmit?: boolean;
+	successAction?: "none" | "redirect";
+	redirectUrl?: string;
+};

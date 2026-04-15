@@ -32,10 +32,65 @@ defineOptions({
 	type: "form",
 	nodeName: "子表单",
 	nodeType: ["NESTED"],
-
-	// 自定义属性面板结构与节点接收的所有可配置内容
 	configPanelList: {
-		props: [],
+		props: [
+			{
+				prop: "submit_mode",
+				defaultValue: "internal",
+				type: "select",
+				label: "提交模式",
+				options: [
+					{ label: "仅保存到平台", value: "internal" },
+					{ label: "转发到指定地址", value: "proxy" },
+				],
+			},
+			{
+				prop: "submit_endpoint",
+				defaultValue: "",
+				type: "input",
+				label: "提交地址",
+				placeholder: "例如：https://example.com/api/form",
+			},
+			{
+				prop: "submit_method",
+				defaultValue: "POST",
+				type: "select",
+				label: "提交方法",
+				options: [
+					{ label: "POST", value: "POST" },
+					{ label: "PUT", value: "PUT" },
+				],
+			},
+			{
+				prop: "submit_successMessage",
+				defaultValue: "表单提交成功",
+				type: "input",
+				label: "成功提示",
+			},
+			{
+				prop: "submit_resetAfterSubmit",
+				defaultValue: true,
+				type: "switch",
+				label: "提交成功后清空",
+			},
+			{
+				prop: "submit_successAction",
+				defaultValue: "none",
+				type: "select",
+				label: "成功后动作",
+				options: [
+					{ label: "不处理", value: "none" },
+					{ label: "跳转到链接", value: "redirect" },
+				],
+			},
+			{
+				prop: "submit_redirectUrl",
+				defaultValue: "",
+				type: "input",
+				label: "跳转地址",
+				placeholder: "例如：https://www.baidu.com",
+			},
+		],
 		validate: [],
 		style: [
 			{

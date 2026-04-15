@@ -3,7 +3,7 @@
 		id="property-panel"
 		class="w-[400px] shrink h-full p-4 flex flex-col items-center justify-start overflow-y-scroll"
 	>
-		<template v-if="Object.keys(formList).length > 0">
+		<template v-if="Object.keys(groupedFormList).length > 0">
 			<el-breadcrumb class="w-full m-h-6 mb-2" :separator-icon="ArrowRight">
 				<el-breadcrumb-item
 					class="mb-1"
@@ -15,14 +15,12 @@
 			<el-collapse class="w-full" v-model="activeNames">
 				<el-collapse-item
 					:name="key"
-					v-for="(value, key) in formList"
+					v-for="(value, key) in groupedFormList"
 					:key="key"
 				>
 					<template #title>
 						<div class="text-lg">
-							<span v-if="key === 'props'"> 属性 </span>
-							<span v-else-if="key === 'validate'"> 校验 </span>
-							<span v-if="key === 'style'"> 样式 </span>
+							<span>{{ getSectionLabel(key) }}</span>
 						</div>
 					</template>
 					<el-form :ref="'form' + key" label-width="auto">
@@ -35,13 +33,13 @@
 							<template v-if="item.type === 'input'">
 								<el-input
 									:placeholder="item.placeholder"
-									:maxLength="20"
-									v-model="form[key][item.prop]"
+									:maxLength="80"
+									v-model="getModelGroup(key)[item.prop]"
 								></el-input>
 							</template>
 							<template v-else-if="item.type === 'select'">
 								<el-select
-									v-model="form[key][item.prop]"
+									v-model="getModelGroup(key)[item.prop]"
 									:placeholder="item.placeholder"
 									clearable
 								>
@@ -55,14 +53,14 @@
 							</template>
 							<template v-else-if="item.type === 'input-number'">
 								<el-input-number
-									v-model="form[key][item.prop]"
+									v-model="getModelGroup(key)[item.prop]"
 									:min="1"
 									:max="100"
 								/>
 							</template>
 							<template v-else-if="item.type === 'switch'">
 								<el-switch
-									v-model="form[key][item.prop]"
+									v-model="getModelGroup(key)[item.prop]"
 									:active-value="true"
 									:inactive-value="false"
 								></el-switch>
@@ -85,7 +83,7 @@ import { usePropertyPanelStore } from "@/stores/PropertyPanel";
 import { storeToRefs } from "pinia";
 import { useFormNodeTreeStore } from "@/stores/formNodeTree";
 import { computed, ref, watch } from "vue";
-import type { ConfigPanelList } from "@/types/index";
+import type { ConfigPanelItem, ConfigPanelList } from "@/types/index";
 import { ElMessage } from "element-plus";
 import { ArrowRight } from "@element-plus/icons-vue";
 
@@ -102,6 +100,52 @@ const formList = ref<ConfigPanelList>({});
 
 const activeNames = ref<string[]>([]);
 
+const submitPropSet = new Set([
+	"submit_mode",
+	"submit_endpoint",
+	"submit_method",
+	"submit_successMessage",
+	"submit_resetAfterSubmit",
+	"submit_successAction",
+	"submit_redirectUrl",
+]);
+
+const sectionLabels: Record<string, string> = {
+	props: "属性",
+	submit: "提交配置",
+	validate: "校验",
+	style: "样式",
+};
+
+const getSectionLabel = (key: string) => sectionLabels[key] ?? key;
+
+const groupedFormList = computed(() => {
+	const result: ConfigPanelList = {};
+	Object.entries(formList.value).forEach(([key, value]) => {
+		if (key === "props") {
+			const propsItems = (value ?? []) as ConfigPanelItem[];
+			const submitItems = propsItems.filter((item) => submitPropSet.has(item.prop));
+			const normalProps = propsItems.filter((item) => !submitPropSet.has(item.prop));
+			if (normalProps.length) result.props = normalProps;
+			if (submitItems.length) result.submit = submitItems;
+			return;
+		}
+		if ((value ?? []).length) {
+			result[key] = value;
+		}
+	});
+	return result;
+});
+
+const getModelGroup = (key: string) => {
+	if (key === "submit" || key === "props") {
+		form.value.props = form.value.props ?? {};
+		return form.value.props;
+	}
+	form.value[key] = form.value[key] ?? {};
+	return form.value[key];
+};
+
 watch(currentFormNode, () => {
 	if (currentFormNode && currentFormNode.value?.id) {
 		const res = getFormNodePropObj(currentFormNode.value.id);
@@ -111,10 +155,11 @@ watch(currentFormNode, () => {
 			return ElMessage.error("获取表单节点属性失败");
 		formList.value = configPanelList;
 		form.value = configs;
+		activeNames.value = Object.keys(groupedFormList.value);
 	} else {
-		// 重置状态
 		form.value = {};
 		formList.value = {};
+		activeNames.value = [];
 	}
 });
 
@@ -127,13 +172,11 @@ watch(
 	form,
 	(newVal) => {
 		if (newVal && currentFormNode.value?.id) {
-			// console.log(form.value, 'form.value')
-			// console.log(newVal, 'newVal')
 			updateFormNodeConfigs(currentFormNode.value.id, newVal);
 		} else {
-			// 重置状态
 			form.value = {};
 			formList.value = {};
+			activeNames.value = [];
 		}
 	},
 	{

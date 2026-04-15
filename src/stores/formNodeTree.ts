@@ -1,12 +1,12 @@
 import { defineStore, storeToRefs } from "pinia";
 import type { FormNode, FormNodeCmpType } from "@/types/index";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { AnimationManager } from "@/utils/animation";
 import { nextTick } from "vue";
 import { ElMessage } from "element-plus";
-import { v4 as v4uuid } from "uuid";
 import { cloneDeep } from "lodash";
 import { useCommandManager } from "./commandManager";
+import { createRootFormNode, normalizeFormNodeTree } from "@/utils/formSchema";
 import {
 	AddNodeCommand,
 	ModifyNodeCommand,
@@ -18,90 +18,39 @@ const commandManagerStore = useCommandManager();
 const { commandManager } = storeToRefs(commandManagerStore);
 
 interface Info {
-	path: number[]; // 用于比对嵌套节点的位置，便于插入正确显示，上面的节点插入下面的节点插入到下面节点的后面，反过来则反之
+	path: number[];
 	array: FormNode[];
 	index: number;
 }
 export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
-	const formNodeTree = ref<FormNode[]>([
-		{
-			id: v4uuid(),
-			type: "form",
-			nodeType: ["NESTED", "NODRAG", "ROOT"],
-			name: "表单",
-			configs: {
-				style: {
-					width: "100%",
-					minHeight: "660px",
-					padding: "20px",
-				},
-			},
-			configPanelList: {
-				props: [],
-				validate: [],
-				style: [
-					{
-						prop: "padding",
-						defaultValue: "20px",
-						type: "input",
-						label: "内边距",
-					},
-				],
-			},
-			childrens: [],
-		},
-	]);
+	const formNodeTree = ref<FormNode[]>([createRootFormNode()]);
 
-	// 将 node
 	const insertBefore = (
 		node: FormNode,
 		target: FormNode | null | undefined,
 		animation = false,
 		insertAfter = false
 	) => {
-		// console.log(node, "node");
-		// console.log(target, "target");
-		// // console.log(formNodeTree.value, "formNodeTree.beforevalue");
 		return new Promise<void>((resolve) => {
-			if (target === undefined || target === null)
-				return formNodeTree.value.push(node);
-			// 根据 id 找到 node 在formNodeTree 中的位置，包含所在的父节点
+			if (target === undefined || target === null) return formNodeTree.value.push(node);
 			const nodeInfo = findNodeById(node.id, formNodeTree.value);
-			// 根据 id 找到 target 在formNodeTree 中的位置，包含所在的父节点
 			const targetInfo = findNodeById(target.id, formNodeTree.value);
-			// 未找到插入目标节点，直接返回
 			if (!targetInfo) {
 				console.error("未找到目标节点", target.id);
 				return;
 			}
-			// console.log(
-			// 	cloneDeep(nodeInfo),
-			// 	"nodeInfo",
-			// 	cloneDeep(targetInfo),
-			// 	"targetInfo"
-			// );
-			// // console.log(formNodeElements, "formNodeElements");"
-			// let flip: Flip | null = null;
 
 			let animationManager: AnimationManager | null = null;
-			// 如果需要动画效果
 			if (animation) {
-				// 创建当前动画实例
 				animationManager = new AnimationManager({
-					duration: 100, // 动画持续时间(毫秒)
-					easing: "ease-in-out", // 可选，动画缓动函数
+					duration: 100,
+					easing: "ease-in-out",
 				});
-				const container = document.getElementById(
-					"design-canvas"
-				) as HTMLElement;
+				const container = document.getElementById("design-canvas") as HTMLElement;
 				animationManager.captureAnimationState(container);
-				// flip = new Flip(Array.from(formNodeElements) as HTMLElement[], 0.15);
-				// flip.first();
 			}
-			// 如果 node 存在于 formNodeTree 中，则从 formNodeTree 中移除
 			if (nodeInfo) {
 				if (nodeInfo.array === targetInfo.array) {
-					// console.log(nodeInfo, "nodeInfo", targetInfo, "targetInfo");
 					if (targetInfo.index > nodeInfo.index) {
 						commandManager.value.execute(
 							new CompositeNodeCommand(
@@ -109,9 +58,6 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 								new AddNodeCommand(targetInfo.array, node, targetInfo.index)
 							)
 						);
-
-						// nodeInfo.array.splice(nodeInfo.index, 1);
-						// targetInfo.array.splice(targetInfo.index, 0, node);
 					} else if (targetInfo.index < nodeInfo.index) {
 						commandManager.value.execute(
 							new CompositeNodeCommand(
@@ -119,16 +65,11 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 								new AddNodeCommand(targetInfo.array, node, targetInfo.index)
 							)
 						);
-
-						// nodeInfo.array.splice(nodeInfo.index, 1);
-						// targetInfo.array.splice(targetInfo.index, 0, node);
 					} else {
 						console.error("目标节点和插入节点索引相同");
 						return;
 					}
 				} else {
-					// 如果是跨容器插入，则将 node 从原来的父节点中移除，并插入到目标节点的前面
-					// 根据 Info 中的 path，判断位置关系
 					let isTargetAboveNode = false;
 					for (const index in targetInfo.path) {
 						if (targetInfo.path[index] > nodeInfo.path[index]) {
@@ -148,8 +89,6 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 								new AddNodeCommand(targetInfo.array, node, targetInfo.index)
 							)
 						);
-						// nodeInfo.array.splice(nodeInfo.index, 1);
-						// targetInfo.array.splice(targetInfo.index, 0, node);
 					} else {
 						commandManager.value.execute(
 							new CompositeNodeCommand(
@@ -157,30 +96,22 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 								new AddNodeCommand(targetInfo.array, node, targetInfo.index + 1)
 							)
 						);
-						// nodeInfo.array.splice(nodeInfo.index, 1);
-						// targetInfo.array.splice(targetInfo.index + 1, 0, node);
 					}
 				}
+			} else if (insertAfter) {
+				commandManager.value.execute(
+					new AddNodeCommand(targetInfo.array, node, targetInfo.index + 1)
+				);
 			} else {
-				if (insertAfter) {
-					// console.log(AddNodeCommand);
-					commandManager.value.execute(
-						new AddNodeCommand(targetInfo.array, node, targetInfo.index + 1)
-					);
-					// targetInfo.array.splice(targetInfo.index + 1, 0, node);
-				} else {
-					commandManager.value.execute(
-						new AddNodeCommand(targetInfo.array, node, targetInfo.index)
-					);
-					// targetInfo.array.splice(targetInfo.index, 0, node);
-				}
+				commandManager.value.execute(
+					new AddNodeCommand(targetInfo.array, node, targetInfo.index)
+				);
 			}
 			if (animation) {
 				nextTick(() => {
 					nextTick(() => {
 						if (animationManager === null) return resolve();
 						animationManager.animateAll(() => {
-							// console.log("动画完成");
 							resolve();
 						});
 					});
@@ -200,10 +131,8 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		commandManager.value.execute(
 			new DeleteNodeCommand(nodeInfo.array, nodeInfo.index)
 		);
-		// nodeInfo.array.splice(nodeInfo.index, 1);
 	};
 
-	// 插入到指定节点内部作为子节点
 	const insertInto = (node: FormNode, target: FormNode) => {
 		if (!target.nodeType.includes("NESTED")) return;
 		const targetInfo = findNodeById(target.id, formNodeTree.value);
@@ -215,17 +144,11 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		const targetFormNode = targetInfo.array[targetInfo.index];
 
 		if (targetFormNode.childrens === undefined) targetFormNode.childrens = [];
-		// console.log(targetFormNode.childrens, "targetFormNode.childrens");
 		commandManager.value.execute(
 			new AddNodeCommand(targetFormNode.childrens, node, -1)
 		);
-		// targetFormNode.childrens.push(node);
-
-		// console.log(targetFormNode, "targetFormNode");
-		// console.log(formNodeTree.value, "formNodeTree");
 	};
 
-	// 根据 id 递归查找节点，返回节点所在的父节点数组、节点在父节点数组中的索引、节点在父节点数组中的路径
 	const findNodeById = (
 		id: string,
 		formNodeArray: FormNode[],
@@ -241,11 +164,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 				};
 			}
 			if (formNode.childrens && formNode.childrens.length > 0) {
-				const res = findNodeById(
-					id,
-					formNode.childrens,
-					path.concat(Number(index))
-				);
+				const res = findNodeById(id, formNode.childrens, path.concat(Number(index)));
 				if (res) return res;
 			}
 		}
@@ -280,10 +199,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		};
 	};
 
-	const updateFormNodeConfigs = (
-		id: string,
-		newConfigs: Record<string, any>
-	) => {
+	const updateFormNodeConfigs = (id: string, newConfigs: Record<string, any>) => {
 		const findNodeById = (
 			nodes: FormNode[],
 			targetId: string
@@ -303,11 +219,9 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		};
 		const formNode = findNodeById(formNodeTree.value, id);
 		if (formNode === undefined) return ElMessage.error("未找到目标节点");
-		// // console.log(newConfigs, "newConfigs");
 		commandManager.value.execute(
 			new ModifyNodeCommand(formNode, "configs", newConfigs)
 		);
-		// formNode.configs = newConfigs;
 	};
 
 	const getFormNodePath = (formNode: FormNode | FormNodeCmpType) => {
@@ -322,11 +236,7 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 					return path.concat(node.name);
 				}
 				if (node.childrens && node.childrens.length > 0) {
-					const res = findNodePath(
-						node.childrens,
-						targetNode,
-						path.concat(node.name)
-					);
+					const res = findNodePath(node.childrens, targetNode, path.concat(node.name));
 					if (res) return res;
 				}
 			}
@@ -335,8 +245,19 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		return findNodePath(formNodeTree.value, formNode);
 	};
 
+	const replaceFormNodeTree = (nodes: FormNode[]) => {
+		formNodeTree.value = normalizeFormNodeTree(cloneDeep(nodes));
+	};
+
+	const hasPersistedChange = computed(() => {
+		if (formNodeTree.value.length !== 1) return true;
+		const rootNode = formNodeTree.value[0];
+		return Boolean(rootNode?.childrens?.length);
+	});
+
 	return {
 		formNodeTree,
+		hasPersistedChange,
 		insertBefore,
 		getFormNodePropObj,
 		updateFormNodeConfigs,
@@ -344,5 +265,6 @@ export const useFormNodeTreeStore = defineStore("formNodeTree", () => {
 		deleteFormNode,
 		getFormNodePath,
 		findNodeById,
+		replaceFormNodeTree,
 	};
 });

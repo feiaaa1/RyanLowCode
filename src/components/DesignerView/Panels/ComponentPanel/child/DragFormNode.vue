@@ -1,11 +1,11 @@
 <template>
-	<div :ref="drag">
+	<div :ref="drag" class="drag-form-node">
 		<el-button
 			plain
-			size="default"
+			size="large"
 			@click="addFormNode(props.formNode)"
 			id="formNode"
-			class="!active:cursor-move !cursor-auto w-28 h-10 text-center leading-[38px] rounded-lg"
+			class="drag-form-node__button"
 		>
 			{{ props.formNode.name }}
 		</el-button>
@@ -76,9 +76,18 @@ watchEffect(() => {
 </script>
 
 <style lang="scss" scoped>
-#formNode {
-	// border: 1px solid var(--color-border-base);
-	// color: var(--color-text-primary);
-	margin: 0;
+.drag-form-node {
+	width: 100%;
+	height: 100%;
+}
+
+.drag-form-node__button {
+	width: 100%;
+	min-height: 88px;
+	padding: 18px 12px;
+	font-size: 16px;
+	line-height: 1.4;
+	text-align: center;
+	border-radius: 20px;
 }
 </style>

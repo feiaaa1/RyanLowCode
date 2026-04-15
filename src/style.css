@@ -1,81 +1,120 @@
 @import "tailwindcss";
+
 :root {
-	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
 	line-height: 1.5;
 	font-weight: 400;
-	color-scheme: light dark;
-	color: rgba(255, 255, 255, 0.87);
-	background-color: #fafafa;
 	font-synthesis: none;
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	color: #eef3ff;
+	background:
+		radial-gradient(circle at top, rgba(67, 97, 238, 0.18), transparent 32%),
+		linear-gradient(180deg, #0b1220 0%, #111827 100%);
 }
 
-@layer theme {
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
+html,
+body,
+#app {
+	min-height: 100%;
+	margin: 0;
+}
+
+body {
+	min-height: 100vh;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+	font: inherit;
 }
 
 [colorTransition] {
-	transition: all 0.5s ease-in-out;
+	transition: all 0.35s ease;
 }
 
 [data-theme="light"] {
-	/* 背景色 */
-	--color-bg-base: #ffffff;
-	--color-bg-secondary: #f8f8f8;
-	--color-bg-tertiary: #fefefe;
-	--color-bg-tooltip: #333333;
-	--color-bg-disabled: #f5f5f5;
-	--color-bg-highlight: #e6f7ff;
-	/* 文字色 */
-	--color-text-primary: #333333;
-	--color-text-secondary: #666666;
-	--color-text-tertiary: #999999;
-	/* 图标色 */
-	--color-icon-default: #555555;
-	--color-icon-hover: #3a7bd5;
-	--color-icon-disabled: #cccccc;
-	/* 主色/辅色 */
-	--color-primary: #3a7bd5;
-	--color-primary-light: #5a9cf8;
-	--color-accent: #f5a623;
-	--color-accent-light: #ffc107;
-	/* 边框色 */
-	--color-border-base: #e0e0e0;
-	--color-border-light: #f0f0f0;
-	--color-border-dark: #cccccc;
+	--color-bg-base: #f3f6fb;
+	--color-bg-secondary: #ffffff;
+	--color-bg-tertiary: #eef3fb;
+	--color-bg-overlay: rgba(255, 255, 255, 0.85);
+	--color-text-primary: #0f172a;
+	--color-text-secondary: #475569;
+	--color-text-tertiary: #64748b;
+	--color-primary: #2563eb;
+	--color-primary-strong: #1d4ed8;
+	--color-accent: #14b8a6;
+	--color-border-base: rgba(148, 163, 184, 0.22);
+	--color-border-dark: rgba(71, 85, 105, 0.35);
+	--color-danger: #dc2626;
+	--shadow-card: 0 18px 50px rgba(15, 23, 42, 0.08);
+	--el-color-primary: #2563eb;
+	--el-border-radius-base: 14px;
+	--el-bg-color: #ffffff;
+	--el-bg-color-page: #f3f6fb;
+	--el-text-color-primary: #0f172a;
+	--el-text-color-regular: #475569;
+	--el-border-color-light: rgba(148, 163, 184, 0.22);
+	--el-fill-color-light: #eef3fb;
 }
 
 [data-theme="dark"] {
-	/* 背景色 */
-	--color-bg-base: #121212;
-	--color-bg-secondary: #1e1e1e;
-	--color-bg-tertiary: #252525;
-	--color-bg-tooltip: #333333;
-	--color-bg-disabled: #2a2a2a;
-	--color-bg-highlight: #1a3a6e;
-	/* 文字色 */
-	--color-text-primary: #f0f0f0;
-	--color-text-secondary: #aaaaaa;
-	--color-text-tertiary: #777777;
-	/* 图标色 */
-	--color-icon-default: #cccccc;
-	--color-icon-hover: #4a90e2;
-	--color-icon-disabled: #555555;
-	/* 主色/辅色 */
-	--color-primary: #4a90e2;
-	--color-primary-light: #6ba8f5;
-	--color-accent: #ffaa00;
-	--color-accent-light: #ffc233;
-	/* 边框色 */
-	--color-border-base: #333333;
-	--color-border-light: #252525;
-	--color-border-dark: #555555;
+	--color-bg-base: #0b1220;
+	--color-bg-secondary: #111827;
+	--color-bg-tertiary: #172033;
+	--color-bg-overlay: rgba(17, 24, 39, 0.86);
+	--color-text-primary: #f8fafc;
+	--color-text-secondary: #cbd5e1;
+	--color-text-tertiary: #94a3b8;
+	--color-primary: #60a5fa;
+	--color-primary-strong: #3b82f6;
+	--color-accent: #2dd4bf;
+	--color-border-base: rgba(148, 163, 184, 0.18);
+	--color-border-dark: rgba(148, 163, 184, 0.28);
+	--color-danger: #f87171;
+	--shadow-card: 0 20px 60px rgba(2, 6, 23, 0.45);
+	--el-color-primary: #60a5fa;
+	--el-border-radius-base: 14px;
+	--el-bg-color: #111827;
+	--el-bg-color-page: #0b1220;
+	--el-text-color-primary: #f8fafc;
+	--el-text-color-regular: #cbd5e1;
+	--el-border-color-light: rgba(148, 163, 184, 0.18);
+	--el-fill-color-light: #172033;
+	color-scheme: dark;
+}
+
+.el-card,
+.el-dialog,
+.el-drawer,
+.el-table,
+.el-tabs__content,
+.el-menu {
+	border-color: var(--color-border-base) !important;
+}
+
+.el-card,
+.el-dialog,
+.el-drawer {
+	background: var(--color-bg-secondary) !important;
+	box-shadow: var(--shadow-card) !important;
+}
+
+.el-table,
+.el-input__wrapper,
+.el-textarea__inner,
+.el-select__wrapper,
+.el-button,
+.el-menu,
+.el-tabs__nav-wrap::after {
+	background-color: var(--color-bg-tertiary);
 }
 
 .el-drawer {

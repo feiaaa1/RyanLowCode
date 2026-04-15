@@ -1,46 +1,63 @@
 <template>
-	<div id="panel-tabs" class="flex flex-col items-center gap-2 py-4 w-10">
-		<el-tooltip effect="dark" content="大纲树" placement="right">
-			<ScaleToOriginal
-				class="w-6 h-6 cursor-pointer"
-				:class="[
-					{
-						'text-[var(--color-icon-default)]':
-							currentPanel !== 'OutlineTreePanel',
-					},
-					{ 'text-blue-500': currentPanel === 'OutlineTreePanel' },
-				]"
-				@click="currentPanel = 'OutlineTreePanel'"
-			/>
-		</el-tooltip>
-		<el-tooltip effect="dark" content="组件" placement="right">
-			<Menu
-				class="w-6 h-6 cursor-pointer"
-				:class="[
-					{
-						'text-[var(--color-icon-default)]':
-							currentPanel !== 'ComponentPanel',
-					},
-					{ 'text-blue-500': currentPanel === 'ComponentPanel' },
-				]"
-				@click="currentPanel = 'ComponentPanel'"
-			/>
-		</el-tooltip>
+	<div id="panel-tabs" class="panel-tabs">
+		<el-tabs v-model="currentPanel" tab-position="bottom" class="panel-tabs__shell">
+			<el-tab-pane label="项目与页面" name="DataSourcePanel">
+				<DataSourcePanel />
+			</el-tab-pane>
+			<el-tab-pane label="组件库" name="ComponentPanel">
+				<ComponentPanel />
+			</el-tab-pane>
+			<el-tab-pane label="大纲树" name="OutlineTreePanel">
+				<OutlineTreePanel />
+			</el-tab-pane>
+		</el-tabs>
 	</div>
-	<ComponentPanel v-if="currentPanel === 'ComponentPanel'" />
-	<OutlineTreePanel v-if="currentPanel === 'OutlineTreePanel'" />
 </template>
 
 <script setup lang="ts">
+import DataSourcePanel from "@/components/DesignerView/Panels/DataSourcePanel.vue";
 import { ref } from "vue";
 
-const currentPanel = ref("ComponentPanel");
+const currentPanel = ref("DataSourcePanel");
 </script>
 
 <style scoped>
-#panel-tabs {
-	background-color: var(--color-bg-tertiary);
-	border-right: 1px solid var(--color-border-base);
-	color: var(--color-icon-default);
+.panel-tabs,
+.panel-tabs__shell {
+	height: 100%;
+}
+
+:deep(.el-tabs) {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+:deep(.el-tabs__header) {
+	padding: 20px 24px 0;
+	margin: 0;
+	flex-shrink: 0;
+}
+
+:deep(.el-tabs__nav-wrap) {
+	padding-bottom: 12px;
+}
+
+:deep(.el-tabs__item) {
+	height: 54px;
+	line-height: 54px;
+	font-size: 15px;
+	padding: 0 22px;
+	border-radius: 16px;
+	margin-right: 12px;
+}
+
+:deep(.el-tabs__content) {
+	flex: 1;
+	min-height: 0;
+}
+
+:deep(.el-tab-pane) {
+	height: 100%;
 }
 </style>

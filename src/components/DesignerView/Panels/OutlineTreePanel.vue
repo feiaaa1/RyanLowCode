@@ -1,6 +1,12 @@
 <template>
-	<div id="outlineTree-panel" class="shrink h-full w-full p-4">
-		<el-tree :data="data" class="w-full"></el-tree>
+	<div id="outlineTree-panel" class="outline-tree-panel">
+		<header class="outline-tree-panel__header">
+			<p class="outline-tree-panel__eyebrow">Outline</p>
+			<h3>页面大纲树</h3>
+		</header>
+		<div class="outline-tree-panel__body">
+			<el-tree :data="data" class="outline-tree-panel__tree w-full" />
+		</div>
 	</div>
 </template>
 
@@ -21,10 +27,48 @@ const data = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-#outlineTree-panel {
+.outline-tree-panel {
+	height: 100%;
+	width: 100%;
+	padding: 24px;
 	background-color: var(--color-bg-tertiary);
 	border-right: 1px solid var(--color-border-base);
-	grid-template-rows: repeat(auto-fill, 50px);
-	place-items: center center;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.outline-tree-panel__header h3 {
+	font-size: 24px;
+	font-weight: 700;
+	color: var(--color-text-primary);
+	margin-top: 8px;
+}
+
+.outline-tree-panel__eyebrow {
+	font-size: 12px;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: var(--color-text-tertiary);
+}
+
+.outline-tree-panel__body {
+	flex: 1;
+	overflow: auto;
+	padding: 12px;
+	border-radius: 20px;
+	background: color-mix(in srgb, var(--color-bg-overlay) 86%, transparent);
+}
+
+:deep(.el-tree) {
+	background: transparent;
+	font-size: 16px;
+	color: var(--color-text-primary);
+}
+
+:deep(.el-tree-node__content) {
+	height: 42px;
+	border-radius: 12px;
+	padding-right: 8px;
 }
 </style>
