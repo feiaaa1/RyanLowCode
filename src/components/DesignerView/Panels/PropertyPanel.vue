@@ -187,7 +187,7 @@ watch(
 
 <style lang="scss" scoped>
 #property-panel {
-	background-color: var(--color-bg-tertiary);
+	background-color: #fff;
 	border-left: 1px solid var(--color-border-base);
 }
 </style>

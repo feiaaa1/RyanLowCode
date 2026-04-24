@@ -30,7 +30,7 @@ const currentPanel = ref("DataSourcePanel");
 :deep(.el-tabs) {
 	height: 100%;
 	display: flex;
-	flex-direction: column;
+	flex-direction: column-reverse;
 }
 
 :deep(.el-tabs__header) {

@@ -145,6 +145,7 @@ const reloadProjects = async () => {
 	flex-direction: column;
 	gap: 14px;
 	min-height: 0;
+	padding-top: 20px;
 	overflow: auto;
 	padding-right: 6px;
 }

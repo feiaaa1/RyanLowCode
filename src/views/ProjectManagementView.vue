@@ -439,12 +439,14 @@ onMounted(async () => {
 	align-items: center;
 	justify-content: space-between;
 	gap: 12px;
+	width: 100%;
 }
 
 .page-menu__item-main {
 	display: flex;
 	flex-direction: column;
 	gap: 4px;
+	line-height: 1;
 }
 
 .page-menu__item-main small,

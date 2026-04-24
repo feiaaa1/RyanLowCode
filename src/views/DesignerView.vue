@@ -114,8 +114,8 @@ onMounted(async () => {
 }
 
 .designer-banner--error {
-	color: #ffb4ab;
-	background: rgba(173, 34, 59, 0.28);
+	color: var(--color-danger);
+	background: rgba(220, 38, 38, 0.08);
 }
 
 @media (max-width: 1700px) {

@@ -1,10 +1,10 @@
 <template>
 	<div id="toolbar" class="w-full h-10 p-3 flex justify-between items-center">
 		<div class="toolbar-left">
-			<el-tooltip effect="dark" content="撤销" placement="bottom">
+			<el-tooltip effect="light" content="撤销" placement="bottom">
 				<el-button :icon="Back" @click="handleUndoClick" :disabled="!canUndo"></el-button>
 			</el-tooltip>
-			<el-tooltip effect="dark" content="重做" placement="bottom">
+			<el-tooltip effect="light" content="重做" placement="bottom">
 				<el-button :icon="Right" @click="handleRedoClick" :disabled="!canRedo"></el-button>
 			</el-tooltip>
 		</div>

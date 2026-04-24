@@ -1,5 +1,5 @@
 <template>
-	<div class="min-h-screen auth-shell">
+	<div class="min-h-screen auth-shell" data-theme="light">
 		<section class="auth-hero">
 			<p class="auth-kicker">Ryan LowCode</p>
 			<h1>把认证、项目与页面编辑串成一条真正可用的链路。</h1>
@@ -85,10 +85,10 @@ const handleSubmit = async () => {
 	display: grid;
 	grid-template-columns: 1.2fr 0.9fr;
 	background:
-		radial-gradient(circle at top left, rgba(255, 140, 66, 0.22), transparent 32%),
-		radial-gradient(circle at bottom right, rgba(68, 230, 196, 0.16), transparent 28%),
-		linear-gradient(135deg, #08131f 0%, #0d1b2a 45%, #132238 100%);
-	color: #f5f7fb;
+		radial-gradient(circle at top left, rgba(37, 99, 235, 0.14), transparent 32%),
+		radial-gradient(circle at bottom right, rgba(20, 184, 166, 0.12), transparent 28%),
+		linear-gradient(135deg, #f8fbff 0%, #eef5ff 45%, #e5eefb 100%);
+	color: #0f172a;
 }
 
 .auth-hero,
@@ -107,7 +107,7 @@ const handleSubmit = async () => {
 	text-transform: uppercase;
 	letter-spacing: 0.4em;
 	font-size: 12px;
-	color: #7ef0d6;
+	color: #0f766e;
 }
 
 .auth-hero h1 {
@@ -120,17 +120,17 @@ const handleSubmit = async () => {
 .auth-copy {
 	max-width: 520px;
 	font-size: 17px;
-	color: rgba(245, 247, 251, 0.72);
+	color: rgba(15, 23, 42, 0.72);
 }
 
 .auth-card {
 	align-self: center;
 	width: min(480px, 92vw);
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	background: rgba(7, 14, 24, 0.72);
+	border: 1px solid rgba(148, 163, 184, 0.24);
+	background: rgba(255, 255, 255, 0.78);
 	backdrop-filter: blur(20px);
 	border-radius: 28px;
-	box-shadow: 0 32px 80px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 32px 80px rgba(15, 23, 42, 0.12);
 }
 
 .auth-card__header {
@@ -143,7 +143,7 @@ const handleSubmit = async () => {
 }
 
 .auth-card__header p {
-	color: rgba(245, 247, 251, 0.64);
+	color: rgba(15, 23, 42, 0.64);
 }
 
 .auth-submit,
@@ -161,17 +161,17 @@ const handleSubmit = async () => {
 	margin-top: 16px;
 	border: 0;
 	background: transparent;
-	color: #7ef0d6;
+	color: #0f766e;
 	cursor: pointer;
 }
 
 :deep(.el-form-item__label) {
-	color: rgba(245, 247, 251, 0.86);
+	color: rgba(15, 23, 42, 0.86);
 }
 
 :deep(.el-input__wrapper) {
 	border-radius: 14px;
-	background: rgba(255, 255, 255, 0.06);
+	background: rgba(255, 255, 255, 0.92);
 	box-shadow: none;
 }
 

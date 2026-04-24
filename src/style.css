@@ -8,10 +8,10 @@
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	color: #eef3ff;
+	color: #0f172a;
 	background:
-		radial-gradient(circle at top, rgba(67, 97, 238, 0.18), transparent 32%),
-		linear-gradient(180deg, #0b1220 0%, #111827 100%);
+		radial-gradient(circle at top, rgba(37, 99, 235, 0.1), transparent 32%),
+		linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
 }
 
 html,

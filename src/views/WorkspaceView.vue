@@ -100,7 +100,7 @@ const handleLogout = async () => {
 
 .workspace-sidebar {
 	padding: 24px 18px;
-	background: linear-gradient(180deg, rgba(17, 24, 39, 0.96) 0%, rgba(15, 23, 42, 0.92) 100%);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.94) 0%, rgba(242, 247, 255, 0.96) 100%);
 	border-right: 1px solid var(--color-border-base);
 	backdrop-filter: blur(18px);
 	transition: width 0.28s ease, padding 0.28s ease;
@@ -121,7 +121,7 @@ const handleLogout = async () => {
 
 .workspace-sidebar__toggle {
 	flex-shrink: 0;
-	background: rgba(255, 255, 255, 0.04);
+	background: rgba(255, 255, 255, 0.88);
 	border-color: var(--color-border-base);
 	color: var(--color-text-primary);
 }

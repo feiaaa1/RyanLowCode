@@ -22,8 +22,8 @@ export const useThemeStore = defineStore("theme", {
 			this.setWorkspaceSidebarCollapsed(!this.workspaceSidebarCollapsed);
 		},
 		initTheme() {
-			const savedTheme = localStorage.getItem("theme");
-			if (savedTheme) this.theme = savedTheme;
+			this.theme = "light";
+			localStorage.setItem("theme", this.theme);
 			const savedCollapsed = localStorage.getItem("workspaceSidebarCollapsed");
 			if (savedCollapsed !== null) {
 				this.workspaceSidebarCollapsed = savedCollapsed === "true";
